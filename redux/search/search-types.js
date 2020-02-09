@@ -1,0 +1,10 @@
+const SearchActionTypes = {
+    START_SEARCH:'START_SEARCH',
+    SEARCH_SUCCESS: 'SEARCH_SUCCESS',
+    SEARCH_FAILURE: 'SEARCH_FAILURE',
+    IS_LOADING: 'IS_LOADING',
+    SET_COUNT: 'SET_COUNT',
+    SET_INTEREST_COUNT: 'SET_INTEREST_COUNT'
+}
+
+export default SearchActionTypes
