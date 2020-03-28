@@ -1,32 +1,36 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Button, Input, Tag } from "antd";
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import { Button, Input, Slider  } from "antd";
+import { ExportToCsv } from "export-to-csv";
+import { ToastContainer, toast } from "react-toastify";
+import Loader from 'react-loader-spinner'
 
-import DashboardLayout from '../components/dashboardLayout'
-import Header from '../components/header'
-import InterestTable from '../components/table'
+import DashboardLayout from "../components/dashboardLayout";
+import InterestTable from "../components/table";
 
-import {tableColumns} from '../utils/table'
-import {addScore, getInterestNames} from '../utils/search'
+import { tableColumns } from "../utils/table";
 
 import decodeToken from "../utils/auth";
-import { addingCurrentUser, authFacebook } from "../redux/user/user-actions";
-import {searchStart} from '../redux/search/search-actions'
+import { addingCurrentUser } from "../redux/user/user-actions";
+import { searchStart } from "../redux/search/search-actions";
 
+import "react-toastify/scss/main.scss";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 const Index = props => {
-  const [state, setState] = useState({})
-  const { 
-      token, 
-      user, 
-      addUser, 
-      fbToken, 
-      interestData, 
-      searchInterest, 
-      keyword,
-      interestCount } = props;
+  const [state, setState] = useState({ selectedInterest: [], min: null, max: null });
+  const {
+    token,
+    user,
+    addUser,
+    fbToken,
+    interestData,
+    searchInterest,
+    keyword,
+    interestCount,
+    searching
+  } = props;
   const { Search } = Input;
   const router = useRouter();
 
@@ -36,9 +40,10 @@ const Index = props => {
       const { _id, name, email, domain } = decoded;
       const userData = {
         id: _id,
-        name, 
-        email, 
-        domain
+        name,
+        email,
+        domain,
+        xToken: token
       };
       addUser(userData);
     } else if (user) {
@@ -49,94 +54,284 @@ const Index = props => {
   }, []);
 
   useEffect(() => {
+    const max = Math.max.apply(Math, interestData.map(item => item['audience_size']))
+    const min = Math.min.apply(Math, interestData.map(item => item['audience_size']))
+
     setState({
+      ...state,
+      max: max,
+      min: min,
       interests: interestData,
       interestNumber: interestCount
-    })
-  }, [interestData, interestCount])
+    });
+  }, [interestData, interestCount]);
 
-  const faceAuthStart = () => {
-    console.log('#### FB auth start')
-  }
-
-  const responseFacebook = async (res) => {
-    const {authFb, user} = props
-    const {accessToken} = res
-    authFb(accessToken, user.id)
-  }
-
-  const getInterest = async (value) => {
-    await searchInterest(fbToken.token, value, 500)
-  }
+  const getInterest = async value => {
+    await searchInterest(fbToken.token, value, 500);
+  };
 
   const onSelectionChange = (selectedRowKeys, selectedRows) => {
-    
+    console.log("rows", selectedRows);
     const selectedInterest = selectedRows.map(interest => {
-      return interest.name
-    })
-    console.log(selectedInterest)
+      return interest.name;
+    });
     setState({
       ...state,
       selectedRowKeys,
-      selectedInterest
+      selectedInterest,
+      selectedRows
+    });
+  };
+
+  const onCopy = () => {
+    const { selectedInterest } = state;
+    console.log("copy", selectedInterest);
+    if (selectedInterest.length) {
+      navigator.clipboard.writeText(selectedInterest).then(() => {
+        console.log("you copied", selectedInterest.length);
+
+        toast.success(`You copied ${selectedInterest.length} items`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
+      });
+    }else{
+      toast.error(`You have not made any selection`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+    }
+  };
+
+  const options = {
+    fieldSeparator: ",",
+    quoteStrings: '"',
+    decimalSeparator: ".",
+    showLabels: true,
+    showTitle: true,
+    title: "Interest List",
+    useTextFile: false,
+    useBom: true,
+    useKeysAsHeaders: true
+  };
+  const csvExporter = new ExportToCsv(options);
+
+  const handleExport = async () => {
+    // const {selectedRows} = state
+    if(interestData){
+      let exportArray = [];
+      interestData.forEach(item => {
+        let readyExport = {};
+        readyExport.id = item.id;
+        readyExport.name = item.name;
+        readyExport.audience = item.audience_size;
+        readyExport.description = item.description;
+        readyExport.topic = item.topic;
+        readyExport.path = JSON.stringify(item.path);
+        readyExport.score = item.relevance;
+        exportArray.push(readyExport);
+      });
+
+      await csvExporter.generateCsv(exportArray);
+      toast.success(`You downloaded ${interestData.length} items`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+    }else {
+      toast.error(`You have not made any selection`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+    }
+  };
+
+  const onFilterChange = (value) => {
+    const filtered = interestData.filter(item => item['audience_size'] >= value[0] && item['audience_size'] <= value[1])
+    setState({
+      ...state,
+      interests: filtered
+
     })
   }
 
-  const actions = [
-    <FacebookLogin
-        appId={process.env.FB_APP_ID}
-        autoLoad={true}
-        fields="name,email,id"
-        onClick={faceAuthStart}
-        scope="ads_management, email"
-        callback={responseFacebook} 
-        render={renderProps => (
-          <Button type="primary" onClick={renderProps.onClick}>Connect Facebook</Button>
-        )}
-        />
-  ]
-
-  const {interests, selectedRowKeys, interestNumber} = state
+  const { interests, selectedRowKeys, interestNumber, max, min } = state;
   return (
-    <DashboardLayout>
-    <div id="wrapper">
-      <Header actions={actions}/>
-      <div id="main-content">
-        <Search
+      <div id="wrapper">
+        <ToastContainer
+          position="top-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
+        
+        <div id="main-content">
+          <div className="top">
+            <div className="inner">
+          <Search
             placeholder="Find Facebook interest for a keyword"
             enterButton="Getch"
             size="large"
-            onSearch={(value) => getInterest(value)}
+            onSearch={value => getInterest(value)}
           />
-          {
-            interestNumber ?
-            <p><b>{interestNumber}</b> interest found for "{keyword}"</p>
-            : ''
-          }
-          <div id="table">
-            <InterestTable 
-            onSelection={onSelectionChange} 
-            selectedRowKeys={selectedRowKeys} 
-            className="table" columns={tableColumns} 
-            dataSource={interests}/>
+          <div className="controls">
+            <div>
+              {interestNumber ? (
+                <p>
+                  <b>{interestNumber}</b> interest found for "{keyword}"
+                </p>
+              ) : (
+                ""
+              )}
+            </div>
+            <div className="filter">
+              <p>Filter audience</p>
+              <Slider 
+                max={max}
+                min={min}
+                range 
+                defaultValue={[min, max]}
+                onAfterChange={onFilterChange}
+              />
+            </div>
+            <div className="actions">
+              <div className="button">
+                <Button onClick={onCopy}>Copy</Button>
+              </div>
+              <div className="button">
+                <Button onClick={handleExport}>Download as CSV</Button>
+              </div>
+              <div className="divider"></div>
+              <div className="button">
+                <Button onClick={handleExport}>Save as project</Button>
+              </div>
+              <div className="button">
+                <Button color="#4e54c8" onClick={handleExport}>Save to Facebook</Button>
+              </div>
+            </div>
           </div>
-          
-      </div>
-        
+          </div>
+          </div>
 
-      <style jsx>{`
-        #wrapper {
-          margin: 10px;
-        }
-        #main-content {
-          margin-top: 30px;
-        }
-        #table {
-          margin-top: 30px;
-        }
-      `}</style>
-    </div>
-    </DashboardLayout>
+          <div id="table">
+          {
+            searching ? 
+              <div className="loader">
+                <Loader
+                  type="Bars"
+                  color="#4e54c8"
+                  height={100}
+                  width={100}
+                />
+              </div>:
+              <InterestTable
+                onSelection={onSelectionChange}
+                selectedRowKeys={selectedRowKeys}
+                className="table"
+                columns={tableColumns}
+                dataSource={interests}
+              />
+          }
+            
+          </div>
+        </div>
+
+        <style jsx>{`
+          #wrapper {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+          }
+          #main-content {
+            margin-top: 30px;
+            flex-grow: 1;
+          }
+          #table {
+            margin-top: 30px;
+            flex-grow: 1;
+          }
+
+          .controls {
+            display: flex;
+            margin-top: 10px;
+            justify-content: space-between;
+          }
+
+          .actions {
+            display: flex;
+          }
+
+          .actions > * {
+            margin-left: 5px;
+          }
+          .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+
+          }
+          .divider{
+            height: 35px;
+            width:0;
+            border-left: 1px solid #ccc;
+            margin: 0 0 0 5px;
+
+          }
+
+          .filter {
+            width: 30%;
+          }
+
+          .top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 130px;
+            margin-bottom: 20px;
+            width: 100%;
+            background-color: white;
+          }
+
+          .inner {
+            position: fixed;
+            top: 50px;
+            width: 81%;
+            background-color: white;
+            z-index: 100;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+          }
+
+          .header {
+            margin-bottom: 20px;
+          }
+        `}</style>
+      </div>
   );
 };
 
@@ -149,6 +344,7 @@ Index.getInitialProps = async function(context) {
 
 const mapStateToProps = state => ({
   user: state.user.currentUser,
+  searching: state.search.loading,
   fbToken: state.user.fbToken,
   interestData: state.search.interests,
   interestCount: state.search.interestCount,
@@ -157,8 +353,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addUser: item => dispatch(addingCurrentUser(item)),
-  authFb: (token, id) => dispatch(authFacebook({token, id})),
-  searchInterest: (token, value, limit) => dispatch(searchStart({token, value, limit}))
+  searchInterest: (token, value, limit) =>
+    dispatch(searchStart({ token, value, limit }))
 });
+
+Index.Layout = DashboardLayout
 
 export default connect(mapStateToProps, mapDispatchToProps)(Index);

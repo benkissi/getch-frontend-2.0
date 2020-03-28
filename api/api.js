@@ -2,11 +2,12 @@ import axios from "axios";
 import endpoints from './endpoints'
 import {splitArray} from '../utils/search'
 
-export const fbAuthentication = async (token, id) => {
+export const fbAuthentication = async (token, id, fbId) => {
     const url = endpoints.FB_AUTH
     const params = {
         token,
-        id
+        id, 
+        fbId
     }
 
     const res = await axios.get(url, {
@@ -81,4 +82,28 @@ export const getProducts = async (shopName) => {
     })
 
     console.log(res.data)
+}
+
+export const getAdAccounts = async (fbId, token) => {
+    const url = endpoints.GET_ADACCOUNTS(fbId)
+
+    const headers = {
+        'Authorization': token
+    }
+
+    const params = {
+        fbId
+    }
+
+    const res = await axios.get(url,{
+        headers,
+        params
+    })
+
+    return res.data
+}
+
+export const paginateAdAccounts = async (page) => {
+    const res =  await axios.get(page)
+    return res.data
 }

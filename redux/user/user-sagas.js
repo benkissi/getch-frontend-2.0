@@ -32,9 +32,9 @@ export function* signIn() {}
 export function* facebookAuth({payload}){
   yield put(isLoading(true));
   try {
-    const {token, id} = payload
+    const {token, id, fbId} = payload
     yield put(isLoading(true));
-    const fbToken = yield fbAuthentication(token, id)
+    const fbToken = yield fbAuthentication(token, id, fbId)
     yield put(facebookAuthSuccess(fbToken))
     yield put(isLoading(false))
   } catch (error) {
