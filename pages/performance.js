@@ -7,16 +7,18 @@ import { chartData } from "../utils/table";
 import Table from "../components/table";
 import AdAccount from "../components/adAccount";
 import { performanceColumns } from "../utils/table";
-import { getAdAccounts, paginateAdAccounts } from "../api/api";
+import { getAdAccounts, paginateAdAccounts, getCampaigns } from "../api/api";
 
 function Performance(props) {
   const [state, setState] = useState({
     modalVisible: false,
     selectedRowKeys: null,
     paging: {
-      next: '',
-      previous: ''
-    }
+      next: "",
+      previous: ""
+    },
+    selectedAdAccount: {},
+    fetchingCampaigns: false
   });
 
   const { fbId, user } = props;
@@ -46,6 +48,16 @@ function Performance(props) {
     fetchAdAccounts();
   }, [state.modalVisible]);
 
+  useEffect(() => {
+    if (state.selectedAdAccount.id) {
+      fetchCampaigns();
+    }
+  }, [state.selectedAdAccount]);
+
+  useEffect(() => {
+    
+  }, [state.campaigns]);
+
   const setModalVisible = modalVisible => {
     setState({
       ...state,
@@ -56,30 +68,43 @@ function Performance(props) {
   const fetchAdAccounts = async () => {
     if (state.modalVisible) {
       const adAccounts = await getAdAccounts(fbId, user.xToken);
-      console.log(adAccounts);
       setState({
         ...state,
         adAccounts: adAccounts,
         paging: {
           next: adAccounts.paging.next && adAccounts.paging.next,
-          previous: adAccounts.paging.previous && adAccounts.paging.previous,
+          previous: adAccounts.paging.previous && adAccounts.paging.previous
         }
       });
     }
   };
 
-  const handlePagination = async (page) => {
-    const adAccounts = await paginateAdAccounts(page)
-    console.log('paginate',adAccounts)
+  const fetchCampaigns = async () => {
+    setState({
+      ...state,
+      fetchingCampaigns: true
+    })
+    const accountId = state.selectedAdAccount.id;
+    const res = await getCampaigns(accountId, user.xToken);
+    console.log("campaigns", res);
+    setState({
+      ...state,
+      campaigns: res
+    });
+  };
+
+  const handlePagination = async page => {
+    const adAccounts = await paginateAdAccounts(page);
+    console.log("paginate", adAccounts);
     setState({
       ...state,
       adAccounts: adAccounts,
       paging: {
         next: adAccounts.paging.next && adAccounts.paging.next,
-        previous: adAccounts.paging.previous && adAccounts.paging.previous,
+        previous: adAccounts.paging.previous && adAccounts.paging.previous
       }
     });
-  }
+  };
 
   const onSelectionChange = (selectedRowKeys, selectedRows) => {
     console.log("rows", selectedRows);
@@ -94,6 +119,17 @@ function Performance(props) {
     });
   };
 
+  const handleAccountSelect = (id, name) => {
+    setState({
+      ...state,
+      selectedAdAccount: {
+        id,
+        name
+      },
+      modalVisible: false,
+    });
+  };
+
   const { Option } = Select;
   const { selectedRowKeys } = state;
   return (
@@ -103,17 +139,34 @@ function Performance(props) {
           <div className="selection">
             <div className="button item">
               <Button onClick={() => setModalVisible(true)} block>
-                Select Ad account
+                {state.selectedAdAccount.name
+                  ? state.selectedAdAccount.name
+                  : "Select Ad Account"}
               </Button>
             </div>
             <div className="select item">
-              <Select style={{ width: "100%" }} placeholder="Select campaign">
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
+              <Select
+                showSearch
+                style={{ width: "100%" }}
+                loading={state.fetchingCampaigns}
+                placeholder="Select a campaign"
+                optionFilterProp="children"
+                // onChange={onChange}
+                // onFocus={onFocus}
+                // onBlur={onBlur}
+                // onSearch={onSearch}
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {
+                  state.campaigns ?
+                  state.campaigns.data.map((item, index) => {
+                  return <Option value={item.id} key={index}>{item.name}</Option>
+                  }) : ''
+                }
               </Select>
             </div>
             <div className="select item">
@@ -156,27 +209,35 @@ function Performance(props) {
         title="Select an Ad account"
         centered
         visible={state.modalVisible}
-        onOk={() => handlePagination(state.paging.next)}
-        onCancel={() => handlePagination(state.paging.previous)}
+        onOk={() => setModalVisible(false)}
+        onCancel={() => setModalVisible(false)}
         okText="Next"
-        cancelText= "Previous"
-        okButtonProps= {{disabled: !(!!state.paging.next)}}
-        cancelButtonProps= {{disabled: !(!!state.paging.previous)}}
+        cancelText="Previous"
+        okButtonProps={{
+          disabled: !!!state.paging.next,
+          onClick: () => handlePagination(state.paging.next)
+        }}
+        cancelButtonProps={{
+          disabled: !!!state.paging.previous,
+          onClick: () => handlePagination(state.paging.previous)
+        }}
         width={1300}
       >
         <div className="adAccounts">
           <div className="inner">
-          {state.adAccounts
-            ? state.adAccounts.data.map((item, index) => (
-                <div className="account" key={index}>
-                  <AdAccount 
-                    name={item.name} 
-                    accountId={item.id} 
-                    status={item.account_status}/>
-                </div>
-              ))
-            : "Loading..."}
-            </div>
+            {state.adAccounts
+              ? state.adAccounts.data.map((item, index) => (
+                  <div className="account" key={index}>
+                    <AdAccount
+                      name={item.name}
+                      accountId={item.id}
+                      status={item.account_status}
+                      onSelect={handleAccountSelect}
+                    />
+                  </div>
+                ))
+              : "Loading..."}
+          </div>
         </div>
       </Modal>
       <style jsx>

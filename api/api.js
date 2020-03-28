@@ -107,3 +107,17 @@ export const paginateAdAccounts = async (page) => {
     const res =  await axios.get(page)
     return res.data
 }
+
+export const getCampaigns = async (accountId, token) => {
+    const url = endpoints.GET_CAMPAIGNS(accountId)
+
+    const headers = {
+        'Authorization': token
+    }
+
+    const res = await axios.get(url,{
+        headers
+    })
+
+    return res.data
+}

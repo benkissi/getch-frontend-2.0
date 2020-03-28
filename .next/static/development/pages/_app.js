@@ -4,7 +4,7 @@
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, paginateAdAccounts */
+/*! exports provided: fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, paginateAdAccounts, getCampaigns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16,6 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProducts", function() { return getProducts; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAdAccounts", function() { return getAdAccounts; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paginateAdAccounts", function() { return paginateAdAccounts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCampaigns", function() { return getCampaigns; });
 /* harmony import */ var _babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/toConsumableArray */ "./node_modules/@babel/runtime-corejs2/helpers/esm/toConsumableArray.js");
 /* harmony import */ var _babel_runtime_corejs2_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/regenerator */ "./node_modules/@babel/runtime-corejs2/regenerator/index.js");
 /* harmony import */ var _babel_runtime_corejs2_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_regenerator__WEBPACK_IMPORTED_MODULE_1__);
@@ -292,6 +293,32 @@ var paginateAdAccounts = function paginateAdAccounts(page) {
     }
   });
 };
+var getCampaigns = function getCampaigns(accountId, token) {
+  var url, headers, res;
+  return _babel_runtime_corejs2_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.async(function getCampaigns$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].GET_CAMPAIGNS(accountId);
+          headers = {
+            'Authorization': token
+          };
+          _context8.next = 4;
+          return _babel_runtime_corejs2_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
+            headers: headers
+          }));
+
+        case 4:
+          res = _context8.sent;
+          return _context8.abrupt("return", res.data);
+
+        case 6:
+        case "end":
+          return _context8.stop();
+      }
+    }
+  });
+};
 
 /***/ }),
 
@@ -314,6 +341,9 @@ var endpoints = {
   },
   GET_ADACCOUNTS: function GET_ADACCOUNTS(fbId) {
     return "".concat("http://localhost:8080/", "facebook/adaccounts/").concat(fbId);
+  },
+  GET_CAMPAIGNS: function GET_CAMPAIGNS(accountId) {
+    return "".concat("http://localhost:8080/", "facebook/campaigns/").concat(accountId);
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);

@@ -25,8 +25,9 @@ function AdAccount(props) {
         return "NONE";
     }
   };
+
   return (
-    <div id="wrapper">
+    <div id="wrapper" onClick={() => props.onSelect(props.accountId, props.name)}>
       <div className="name">{props.name}</div>
       <div className="id">
         {props.accountId ? props.accountId.replace("act_", "") : ""}

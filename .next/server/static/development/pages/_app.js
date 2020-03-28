@@ -97,7 +97,7 @@ module.exports =
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, paginateAdAccounts */
+/*! exports provided: fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, paginateAdAccounts, getCampaigns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -109,6 +109,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProducts", function() { return getProducts; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAdAccounts", function() { return getAdAccounts; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paginateAdAccounts", function() { return paginateAdAccounts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCampaigns", function() { return getCampaigns; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _endpoints__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./endpoints */ "./api/endpoints.js");
@@ -211,6 +212,16 @@ const paginateAdAccounts = async page => {
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(page);
   return res.data;
 };
+const getCampaigns = async (accountId, token) => {
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_CAMPAIGNS(accountId);
+  const headers = {
+    'Authorization': token
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
+    headers
+  });
+  return res.data;
+};
 
 /***/ }),
 
@@ -227,7 +238,8 @@ const endpoints = {
   GET_PRODUCTS: shop => `${"http://localhost:8080/"}shopify/products/${shop}`,
   FB_AUTH: `${"http://localhost:8080/"}facebook/auth`,
   FB_INTEREST_SEARCH: apiVersion => `https://graph.facebook.com/v${apiVersion}/search`,
-  GET_ADACCOUNTS: fbId => `${"http://localhost:8080/"}facebook/adaccounts/${fbId}`
+  GET_ADACCOUNTS: fbId => `${"http://localhost:8080/"}facebook/adaccounts/${fbId}`,
+  GET_CAMPAIGNS: accountId => `${"http://localhost:8080/"}facebook/campaigns/${accountId}`
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
