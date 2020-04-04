@@ -97,19 +97,23 @@ module.exports =
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, paginateAdAccounts, getCampaigns */
+/*! exports provided: signUp, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signUp", function() { return signUp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fbAuthentication", function() { return fbAuthentication; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchInterest", function() { return searchInterest; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestSuggestions", function() { return getInterestSuggestions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compileInterestSuggestions", function() { return compileInterestSuggestions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProducts", function() { return getProducts; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAdAccounts", function() { return getAdAccounts; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paginateAdAccounts", function() { return paginateAdAccounts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fbPaginate", function() { return fbPaginate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCampaigns", function() { return getCampaigns; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAdsets", function() { return getAdsets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAds", function() { return getAds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestStats", function() { return getInterestStats; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _endpoints__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./endpoints */ "./api/endpoints.js");
@@ -117,6 +121,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const signUp = async (email, password) => {
+  const url = endpoint.SIGN_UP;
+  const data = {
+    email,
+    password
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(url, data);
+  console.log(res);
+};
 const fbAuthentication = async (token, id, fbId) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].FB_AUTH;
   const params = {
@@ -208,12 +221,42 @@ const getAdAccounts = async (fbId, token) => {
   });
   return res.data;
 };
-const paginateAdAccounts = async page => {
+const fbPaginate = async page => {
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(page);
   return res.data;
 };
 const getCampaigns = async (accountId, token) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_CAMPAIGNS(accountId);
+  const headers = {
+    'Authorization': token
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
+    headers
+  });
+  return res.data;
+};
+const getAdsets = async (camaignId, token) => {
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_ADSETS(camaignId);
+  const headers = {
+    'Authorization': token
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
+    headers
+  });
+  return res.data;
+};
+const getAds = async (adsetId, token) => {
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_ADS(adsetId);
+  const headers = {
+    'Authorization': token
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
+    headers
+  });
+  return res.data;
+};
+const getInterestStats = async (adId, token) => {
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_STATS(adId);
   const headers = {
     'Authorization': token
   };
@@ -235,11 +278,15 @@ const getCampaigns = async (accountId, token) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 const endpoints = {
-  GET_PRODUCTS: shop => `${"http://localhost:8080/"}shopify/products/${shop}`,
-  FB_AUTH: `${"http://localhost:8080/"}facebook/auth`,
+  GET_PRODUCTS: shop => `${"http://localhost:9090/"}shopify/products/${shop}`,
+  FB_AUTH: `${"http://localhost:9090/"}facebook/auth`,
   FB_INTEREST_SEARCH: apiVersion => `https://graph.facebook.com/v${apiVersion}/search`,
-  GET_ADACCOUNTS: fbId => `${"http://localhost:8080/"}facebook/adaccounts/${fbId}`,
-  GET_CAMPAIGNS: accountId => `${"http://localhost:8080/"}facebook/campaigns/${accountId}`
+  GET_ADACCOUNTS: fbId => `${"http://localhost:9090/"}facebook/adaccounts/${fbId}`,
+  GET_CAMPAIGNS: accountId => `${"http://localhost:9090/"}facebook/campaigns/${accountId}`,
+  GET_ADSETS: campaignId => `${"http://localhost:9090/"}facebook/adsets/${campaignId}`,
+  GET_ADS: adsetId => `${"http://localhost:9090/"}facebook/ads/${adsetId}`,
+  GET_STATS: adId => `${"http://localhost:9090/"}facebook/stats/${adId}`,
+  SIGN_UP: `${"http://localhost:9090/"}signup`
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -3056,13 +3103,14 @@ const makeStore = initialState => {
 /*!************************************!*\
   !*** ./redux/user/user-actions.js ***!
   \************************************/
-/*! exports provided: siginSuccess, siginStart, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure */
+/*! exports provided: siginSuccess, siginStart, signupStart, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "siginSuccess", function() { return siginSuccess; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "siginStart", function() { return siginStart; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signupStart", function() { return signupStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addingCurrentUser", function() { return addingCurrentUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCurrentUser", function() { return setCurrentUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "siginFailure", function() { return siginFailure; });
@@ -3078,6 +3126,10 @@ const siginSuccess = signedIn => ({
 });
 const siginStart = () => ({
   type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_IN_START
+});
+const signupStart = userCredentials => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_UP_START,
+  payload: userCredentials
 });
 const addingCurrentUser = userData => ({
   type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].ADDING_CURRENT_USER,
@@ -3182,16 +3234,18 @@ const userReducer = (state = INITIAL_STATE, action) => {
 /*!**********************************!*\
   !*** ./redux/user/user-sagas.js ***!
   \**********************************/
-/*! exports provided: setUser, signIn, facebookAuth, onAddingCurrentUser, onSigninStart, onAuthFacebook, userSagas */
+/*! exports provided: setUser, signIn, signUpUser, facebookAuth, onAddingCurrentUser, onSigninStart, onSignupStart, onAuthFacebook, userSagas */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return setUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signIn", function() { return signIn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signUpUser", function() { return signUpUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "facebookAuth", function() { return facebookAuth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAddingCurrentUser", function() { return onAddingCurrentUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSigninStart", function() { return onSigninStart; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSignupStart", function() { return onSignupStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAuthFacebook", function() { return onAuthFacebook; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userSagas", function() { return userSagas; });
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux-saga/effects */ "redux-saga/effects");
@@ -3206,8 +3260,6 @@ __webpack_require__.r(__webpack_exports__);
 function* setUser({
   payload
 }) {
-  console.log("********", payload);
-
   try {
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
 
@@ -3224,6 +3276,12 @@ function* setUser({
   }
 }
 function* signIn() {}
+function* signUpUser({
+  payload
+}) {
+  // const res = yield signUp(payload.email, payload.password)
+  console.log('the payload', payload);
+}
 function* facebookAuth({
   payload
 }) {
@@ -3250,11 +3308,14 @@ function* onAddingCurrentUser() {
 function* onSigninStart() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_IN_START, signIn);
 }
+function* onSignupStart() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_UP_START, signUpUser);
+}
 function* onAuthFacebook() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].AUTH_FACEBOOK, facebookAuth);
 }
 function* userSagas() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSigninStart)]);
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSigninStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSignupStart)]);
 }
 
 /***/ }),
@@ -3278,7 +3339,9 @@ const UserActionTypes = {
   AUTH_FB_FAILURE: "AUTH_FB_FAILURE",
   ADDING_CURRENT_USER: "ADDING_CURRENT_USER",
   LOADING: "LOADING",
-  AUTH_FACEBOOK: "AUTH_FACEBOOK"
+  AUTH_FACEBOOK: "AUTH_FACEBOOK",
+  SIGN_UP_START: "SIGN_UP_START",
+  SIGN_UP_SUCCESS: "SIGN_UP_SUCCESS"
 };
 /* harmony default export */ __webpack_exports__["default"] = (UserActionTypes);
 

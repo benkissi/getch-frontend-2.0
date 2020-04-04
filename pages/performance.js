@@ -7,18 +7,35 @@ import { chartData } from "../utils/table";
 import Table from "../components/table";
 import AdAccount from "../components/adAccount";
 import { performanceColumns } from "../utils/table";
-import { getAdAccounts, paginateAdAccounts, getCampaigns } from "../api/api";
+import { truncate } from "../utils/common"
+import {
+  getAdAccounts,
+  fbPaginate,
+  getCampaigns,
+  getAdsets,
+  getAds,
+  getInterestStats
+} from "../api/api";
 
 function Performance(props) {
   const [state, setState] = useState({
-    modalVisible: false,
+    accountModalVisible: false,
+    campaignModalVisible: false,
     selectedRowKeys: null,
-    paging: {
+    pagingAccounts: {
+      next: "",
+      previous: ""
+    },
+    pagingCampaigns: {
       next: "",
       previous: ""
     },
     selectedAdAccount: {},
-    fetchingCampaigns: false
+    selectedCampaign: {},
+    selectedAdset: {},
+    selectedAd: {},
+    fetchingCampaigns: false,
+    fetchingAdsets: false
   });
 
   const { fbId, user } = props;
@@ -45,65 +62,154 @@ function Performance(props) {
   }, []);
 
   useEffect(() => {
-    fetchAdAccounts();
-  }, [state.modalVisible]);
+    if (state.accountModalVisible) {
+      fetchAdAccounts();
+    }
+  }, [state.accountModalVisible]);
 
   useEffect(() => {
     if (state.selectedAdAccount.id) {
+      setModalVisible(false, "accountModalVisible");
       fetchCampaigns();
     }
   }, [state.selectedAdAccount]);
 
   useEffect(() => {
-    
-  }, [state.campaigns]);
+    if (state.selectedCampaign.id) {
+      fetchAdsets();
+    }
+  }, [state.selectedCampaign]);
 
-  const setModalVisible = modalVisible => {
-    setState({
-      ...state,
-      modalVisible
-    });
+  useEffect(() => {
+    if (state.selectedAdset.id) {
+      fetchAds();
+    }
+  }, [state.selectedAdset]);
+
+  useEffect(() => {
+    if (state.selectedAd.id) {
+      fetchStats();
+    }
+  }, [state.selectedAd]);
+
+  const setModalVisible = (status, modalName) => {
+    setState(prevState => ({
+      ...prevState,
+      [modalName]: status
+    }));
+  };
+
+  const setCampaignsModal = modalVisible => {
+    setState(prevState => ({
+      ...prevState,
+      campaignModalVisible: modalVisible
+    }));
   };
 
   const fetchAdAccounts = async () => {
-    if (state.modalVisible) {
+    if (state.accountModalVisible) {
+      console.log("fetch ad accounts");
       const adAccounts = await getAdAccounts(fbId, user.xToken);
-      setState({
-        ...state,
+      console.log("AD accoutns", adAccounts);
+      setState(prevState => ({
+        ...prevState,
         adAccounts: adAccounts,
-        paging: {
+        pagingAccounts: {
           next: adAccounts.paging.next && adAccounts.paging.next,
           previous: adAccounts.paging.previous && adAccounts.paging.previous
-        }
-      });
+        },
+        selectedAdAccount: {},
+        selectedCampaign: {},
+        selectedAdset: {}
+      }));
     }
   };
 
   const fetchCampaigns = async () => {
-    setState({
-      ...state,
-      fetchingCampaigns: true
-    })
+    setState(prevState => ({
+      ...prevState,
+      fetchingCampaigns: true,
+      selectedCampaign: {}
+    }));
     const accountId = state.selectedAdAccount.id;
     const res = await getCampaigns(accountId, user.xToken);
-    console.log("campaigns", res);
-    setState({
-      ...state,
-      campaigns: res
-    });
+    setState(prevState => ({
+      ...prevState,
+      campaigns: res,
+      fetchingCampaigns: false,
+      pagingCampaigns: {
+        next: res.paging && res.paging.next,
+        previous: res.paging && res.paging.previous
+      }
+    }));
   };
 
-  const handlePagination = async page => {
-    const adAccounts = await paginateAdAccounts(page);
+  const fetchAdsets = async () => {
+    setState(prevState => ({
+      ...prevState,
+      fetchingAdsets: true,
+      selectedAdset: {}
+    }));
+    const campaignId = state.selectedCampaign.id;
+    const res = await getAdsets(campaignId, user.xToken);
+    console.log("sets", res.data);
+    setState(prevState => ({
+      ...prevState,
+      adsets: res,
+      fetchingAdsets: false
+    }));
+  };
+
+  const fetchAds = async () => {
+    setState(prevState => ({
+      ...prevState,
+      fetchingAds: true
+    }));
+    const adsetId = state.selectedAdset.id;
+    const res = await getAds(adsetId, user.xToken);
+    console.log("ads", res);
+    setState(prevState => ({
+      ...prevState,
+      ads: res,
+      fetchingAds: false
+    }));
+  };
+
+  const fetchStats = async () => {
+    setState(prevState => ({
+      ...prevState,
+      fetchingStats: true
+    }));
+
+    const adId = state.selectedAd.id;
+    const res = await getInterestStats(adId, user.xToken);
+    console.log("stats", res);
+  };
+
+  const handleAccountPagination = async page => {
+    const adAccounts = await fbPaginate(page);
     console.log("paginate", adAccounts);
-    setState({
-      ...state,
+    setState(prevState => ({
+      ...prevState,
       adAccounts: adAccounts,
-      paging: {
-        next: adAccounts.paging.next && adAccounts.paging.next,
-        previous: adAccounts.paging.previous && adAccounts.paging.previous
+      pagingAccounts: {
+        next: adAccounts.paging && adAccounts.paging.next,
+        previous: adAccounts.paging && adAccounts.paging.previous
       }
-    });
+    }));
+  };
+
+  const handleCampaignPagination = async page => {
+    const campaigns = await fbPaginate(page);
+    console.log("paginate", campaigns);
+    setState(prevState => ({
+      ...prevState,
+      campaigns: campaigns,
+      pagingCampaigns: {
+        next: campaigns.paging && campaigns.paging.next,
+        previous: campaigns.paging && campaigns.paging.previous
+      }
+    }));
   };
 
   const onSelectionChange = (selectedRowKeys, selectedRows) => {
@@ -111,23 +217,54 @@ function Performance(props) {
     const selectedInterest = selectedRows.map(interest => {
       return interest.name;
     });
-    setState({
-      ...state,
+    setState(prevState => ({
+      ...prevState,
       selectedRowKeys,
       selectedInterest,
       selectedRows
-    });
+    }));
   };
 
   const handleAccountSelect = (id, name) => {
-    setState({
-      ...state,
+    setState(prevState => ({
+      ...prevState,
       selectedAdAccount: {
         id,
         name
+      }
+    }));
+  };
+
+  const handleCampaignSelect = (id, name) => {
+    setState(prevState => ({
+      ...prevState,
+      selectedCampaign: {
+        id,
+        name
       },
-      modalVisible: false,
-    });
+      campaignModalVisible: false
+    }));
+  };
+
+  const handleAdsetSelect = (value, option) => {
+    console.log("selected", option.props.children);
+    setState(prevState => ({
+      ...prevState,
+      selectedAdset: {
+        id: option.props.value,
+        name: option.props.children
+      }
+    }));
+  };
+
+  const handleAdSelect = (value, option) => {
+    setState(prevState => ({
+      ...prevState,
+      selectedAd: {
+        id: option.props.value,
+        name: option.props.children
+      }
+    }));
   };
 
   const { Option } = Select;
@@ -138,55 +275,87 @@ function Performance(props) {
         <Col span={4}>
           <div className="selection">
             <div className="button item">
-              <Button onClick={() => setModalVisible(true)} block>
+              <Button
+                style={{ textAlign: "left" }}
+                className="modalButtons"
+                onClick={() => setModalVisible(true, "accountModalVisible")}
+                block
+              >
                 {state.selectedAdAccount.name
-                  ? state.selectedAdAccount.name
+                  ? truncate(state.selectedAdAccount.name, 30)
                   : "Select Ad Account"}
               </Button>
             </div>
             <div className="select item">
-              <Select
-                showSearch
-                style={{ width: "100%" }}
+              <Button
+                style={{ textAlign: "left" }}
+                onClick={() => setCampaignsModal(true)}
+                block
                 loading={state.fetchingCampaigns}
-                placeholder="Select a campaign"
+                disabled={!!!state.selectedAdAccount.name}
+              >
+                {state.selectedCampaign.name
+                  ? truncate(state.selectedCampaign.name, 30)
+                  : "Select Campaign"}
+              </Button>
+            </div>
+            <div className="select item">
+              <Select
+                disabled={!!!state.selectedCampaign.name}
+                value={
+                  state.selectedAdset.name
+                    ? state.selectedAdset.name
+                    : "Select Adset"
+                }
+                style={{ width: "100%" }}
+                placeholder="Select Adset"
+                loading={state.fetchingAdsets}
+                showSearch
                 optionFilterProp="children"
-                // onChange={onChange}
-                // onFocus={onFocus}
-                // onBlur={onBlur}
-                // onSearch={onSearch}
+                onSelect={handleAdsetSelect}
                 filterOption={(input, option) =>
                   option.props.children
                     .toLowerCase()
                     .indexOf(input.toLowerCase()) >= 0
                 }
               >
-                {
-                  state.campaigns ?
-                  state.campaigns.data.map((item, index) => {
-                  return <Option value={item.id} key={index}>{item.name}</Option>
-                  }) : ''
+                {state.adsets
+                  ? state.adsets.data.map((item, index) => {
+                      return (
+                        <Option value={item.id} key={index}>
+                          {item.name}
+                        </Option>
+                      );
+                    })
+                  : ""}
+              </Select>
+            </div>
+            <div className="select item">
+              <Select
+                disabled={!!!state.selectedAdset.name}
+                style={{ width: "100%" }}
+                value={
+                  state.selectedAd.name ? state.selectedAd.name : "Select Ad"
                 }
-              </Select>
-            </div>
-            <div className="select item">
-              <Select style={{ width: "100%" }} placeholder="Select adset">
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
-              </Select>
-            </div>
-            <div className="select item">
-              <Select style={{ width: "100%" }} placeholder="Select ad">
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
+                placeholder="Select ad"
+                showSearch
+                optionFilterProp="children"
+                onSelect={handleAdSelect}
+                filterOption={(input, option) =>
+                  option.props.children
+                    .toLowerCase()
+                    .indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {state.ads
+                  ? state.ads.data.map((item, index) => {
+                      return (
+                        <Option value={item.id} key={index}>
+                          {item.name}
+                        </Option>
+                      );
+                    })
+                  : ""}
               </Select>
             </div>
           </div>
@@ -208,18 +377,18 @@ function Performance(props) {
       <Modal
         title="Select an Ad account"
         centered
-        visible={state.modalVisible}
-        onOk={() => setModalVisible(false)}
-        onCancel={() => setModalVisible(false)}
+        visible={state.accountModalVisible}
+        onOk={() => setModalVisible(false, "accountModalVisible")}
+        onCancel={() => setModalVisible(false, "accountModalVisible")}
         okText="Next"
         cancelText="Previous"
         okButtonProps={{
-          disabled: !!!state.paging.next,
-          onClick: () => handlePagination(state.paging.next)
+          disabled: !!!state.pagingAccounts.next,
+          onClick: () => handleAccountPagination(state.pagingAccounts.next)
         }}
         cancelButtonProps={{
-          disabled: !!!state.paging.previous,
-          onClick: () => handlePagination(state.paging.previous)
+          disabled: !!!state.pagingAccounts.previous,
+          onClick: () => handleAccountPagination(state.pagingAccounts.previous)
         }}
         width={1300}
       >
@@ -240,8 +409,46 @@ function Performance(props) {
           </div>
         </div>
       </Modal>
+      <Modal
+        title="Select a campaign"
+        centered
+        visible={state.campaignModalVisible}
+        onOk={() => setCampaignsModal(false, "campaignModalVisible")}
+        onCancel={() => setCampaignsModal(false, "campaignModalVisible")}
+        okText="Next"
+        cancelText="Previous"
+        okButtonProps={{
+          disabled: !!!state.pagingCampaigns.next,
+          onClick: () => handleCampaignPagination(state.pagingCampaigns.next)
+        }}
+        cancelButtonProps={{
+          disabled: !!!state.pagingCampaigns.previous,
+          onClick: () =>
+            handleCampaignPagination(state.pagingCampaigns.previous)
+        }}
+        width={1300}
+      >
+        <div className="adAccounts">
+          <div className="inner">
+            {state.campaigns
+              ? state.campaigns.data.map((item, index) => (
+                  <div className="account" key={index}>
+                    <AdAccount
+                      name={item.name}
+                      accountId={item.id}
+                      // status={item.account_status}
+                      onSelect={handleCampaignSelect}
+                    />
+                  </div>
+                ))
+              : "Loading..."}
+          </div>
+        </div>
+      </Modal>
       <style jsx>
         {`
+          .modalButtons {
+          }
           #performance {
             display: flex;
             position: relative;

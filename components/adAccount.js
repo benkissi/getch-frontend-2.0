@@ -32,7 +32,11 @@ function AdAccount(props) {
       <div className="id">
         {props.accountId ? props.accountId.replace("act_", "") : ""}
       </div>
-      <div className={`_${props.status}`}>{status()}</div>
+      {
+        props.status ?
+        <div className={`_${props.status}`}>{status()}</div>: ''
+      }
+      
       <style jsx>{`
         #wrapper {
           display: flex;

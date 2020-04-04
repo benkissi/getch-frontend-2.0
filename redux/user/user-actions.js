@@ -9,6 +9,11 @@ export const siginStart = () => ({
   type: UserActionTypes.SIGN_IN_START
 });
 
+export const signupStart = userCredentials => ({
+  type: UserActionTypes.SIGN_UP_START,
+  payload: userCredentials
+})
+
 export const addingCurrentUser = userData => ({
   type: UserActionTypes.ADDING_CURRENT_USER,
   payload: userData

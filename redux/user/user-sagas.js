@@ -8,10 +8,9 @@ import {
   facebookAuthSuccess,
   fbAuthFailure
 } from "./user-actions";
-import {fbAuthentication} from '../../api/api'
+import {fbAuthentication, signUp} from '../../api/api'
 
 export function* setUser({ payload }) {
-  console.log("********", payload);
   try {
     yield put(isLoading(true));
     if (!payload) {
@@ -28,6 +27,11 @@ export function* setUser({ payload }) {
 }
 
 export function* signIn() {}
+
+export function* signUpUser({payload}) {
+  // const res = yield signUp(payload.email, payload.password)
+  console.log('the payload', payload)
+}
 
 export function* facebookAuth({payload}){
   yield put(isLoading(true));
@@ -52,6 +56,10 @@ export function* onSigninStart() {
   yield takeLatest(UserActionTypes.SIGN_IN_START, signIn);
 }
 
+export function* onSignupStart() {
+  yield takeLatest(UserActionTypes.SIGN_UP_START, signUpUser)
+}
+
 export function* onAuthFacebook() {
   yield takeLatest(UserActionTypes.AUTH_FACEBOOK, facebookAuth)
 }
@@ -60,6 +68,7 @@ export function* userSagas() {
   yield all([
     call(onAuthFacebook),
     call(onAddingCurrentUser), 
-    call(onSigninStart)
+    call(onSigninStart),
+    call(onSignupStart)
   ]);
 }

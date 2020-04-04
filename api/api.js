@@ -2,6 +2,17 @@ import axios from "axios";
 import endpoints from './endpoints'
 import {splitArray} from '../utils/search'
 
+export const signUp = async (email, password) =>{
+    const url = endpoint.SIGN_UP
+    const data = {
+        email,
+        password
+    }
+
+    const res = await axios.post(url, data)
+    console.log(res)
+}
+
 export const fbAuthentication = async (token, id, fbId) => {
     const url = endpoints.FB_AUTH
     const params = {
@@ -103,7 +114,7 @@ export const getAdAccounts = async (fbId, token) => {
     return res.data
 }
 
-export const paginateAdAccounts = async (page) => {
+export const fbPaginate = async (page) => {
     const res =  await axios.get(page)
     return res.data
 }
@@ -121,3 +132,50 @@ export const getCampaigns = async (accountId, token) => {
 
     return res.data
 }
+
+export const getAdsets = async (camaignId, token) => {
+    const url = endpoints.GET_ADSETS(camaignId)
+
+    const headers = {
+        'Authorization': token
+    }
+
+    const res = await axios.get(url,{
+        headers
+    })
+
+    return res.data
+}
+
+export const getAds = async (adsetId, token) => {
+    const url = endpoints.GET_ADS(adsetId)
+
+    const headers = {
+        'Authorization': token
+    }
+
+    const res = await axios.get(url,{
+        headers
+    })
+
+    return res.data
+}
+
+export const getInterestStats = async (adId, token) => {
+    const url = endpoints.GET_STATS(adId)
+
+    const headers = {
+        'Authorization': token
+    }
+
+    const res = await axios.get(url,{
+        headers
+    })
+
+    return res.data
+}
+
+
+
+
+
