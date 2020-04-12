@@ -7,7 +7,9 @@ const endpoints = {
     GET_ADSETS: (campaignId) => `${process.env.BASE_URL}facebook/adsets/${campaignId}`,
     GET_ADS: (adsetId) => `${process.env.BASE_URL}facebook/ads/${adsetId}`,
     GET_STATS: (adId) => `${process.env.BASE_URL}facebook/stats/${adId}`,
-    SIGN_UP: `${process.env.BASE_URL}signup`
+    SIGN_UP: `${process.env.BASE_URL}users/signup`,
+    SIGN_IN: `${process.env.BASE_URL}users/signin`,
+    LOG_OUT: `${process.env.BASE_URL}users/logout`,
 }
 
 export default endpoints

@@ -28,10 +28,10 @@ export const tableColumns = [
       render: tags => (
         <span>
           {
-            tags?tags.map(tag => {
+            tags?tags.map((tag, index) => {
               return (
-                <div style={{display: 'inline'}}>
-                  <Tag color="magenta" key={tag}>
+                <div style={{display: 'inline'}} key={index}>
+                  <Tag color="magenta" >
                   {tag.toUpperCase()}
                   </Tag> 
                 </div>

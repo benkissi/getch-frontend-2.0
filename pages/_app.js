@@ -9,8 +9,9 @@ export default withRedux(makeStore, { debug: true })(
   class MyApp extends App {
 
     render() {
+      const defaultLayout = (props) => <div>{props.children}</div>;
       const { Component, pageProps, store } = this.props;
-      const Layout = Component.Layout || DashboardLayout
+      const Layout = Component.Layout || defaultLayout
       return (
         <Provider store={store}>
           <Layout>

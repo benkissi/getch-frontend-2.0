@@ -1,9 +1,14 @@
 import { Row, Col } from 'antd';
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Button  } from "antd";
 import { connect } from "react-redux";
 import { authFacebook } from "../redux/user/user-actions";
 import SideBar from "../components/sideBar";
+import Onboarding from "../components/onboarding"
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/scss/main.scss";
 
 import Header from "./header";
 
@@ -12,8 +17,31 @@ const DashboardLayout = props => {
     const {
         authFb,
         user,
-        fbToken
+        fbToken,
+        userError,
+        searchError
       } = props;
+      const router = useRouter();
+
+      useEffect(() => {
+        if(searchError || userError){
+            toast.error(`There was an error.`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+              });
+        }
+      }, [userError, searchError])
+
+      useEffect(() => {
+        if(user == null){
+            router.push("/signup");
+        }
+      }, [props.user])
+
     const faceAuthStart = () => {
         console.log("#### FB auth start");
     };
@@ -25,26 +53,21 @@ const DashboardLayout = props => {
     };
 
     const actions = [
-        <FacebookLogin
-          appId={process.env.FB_APP_ID}
-          autoLoad={true}
-          fields="name,email,id"
-          onClick={faceAuthStart}
-          scope="ads_management, email"
-          callback={responseFacebook}
-          render={renderProps => (
-            <Button
-              disabled={!!fbToken}
-              type="primary"
-              onClick={renderProps.onClick}
-            >
-              Connect Facebook
-            </Button>
-          )}
-        />
+        <Button style={{background: "#f86326", border: "none", color: "white"}}>Get life time access</Button>,
     ]
  return (
      <div className="layout">
+         <ToastContainer
+          position="top-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
          <Row>
             <Col style={{position: 'relative', height: '100vh'}} span={4}><SideBar/></Col>
             <Col style={{padding: '0 20px 0 20px', minHeight: '100vh'}} span={20} className="child-container">
@@ -54,6 +77,10 @@ const DashboardLayout = props => {
             <div className="children">
                 {props.children}
             </div>
+            {
+                !fbToken && user ?
+                <Onboarding/>: ""
+            }
                 
             <footer>
                 <div className="footer">
@@ -115,7 +142,9 @@ const DashboardLayout = props => {
 
 const mapStateToProps = state => ({
     user: state.user.currentUser,
-    fbToken: state.user.fbToken
+    fbToken: state.user.fbToken,
+    userError: state.user.error,
+    searchError: state.search.error
   });
 
   const mapDispatchToProps = dispatch => ({

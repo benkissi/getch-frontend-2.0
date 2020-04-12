@@ -97,12 +97,13 @@ module.exports =
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: signUp, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats */
+/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signUp", function() { return signUp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signIn", function() { return signIn; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fbAuthentication", function() { return fbAuthentication; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchInterest", function() { return searchInterest; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestSuggestions", function() { return getInterestSuggestions; });
@@ -114,6 +115,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAdsets", function() { return getAdsets; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAds", function() { return getAds; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestStats", function() { return getInterestStats; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _endpoints__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./endpoints */ "./api/endpoints.js");
@@ -122,24 +124,45 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const signUp = async (email, password) => {
-  const url = endpoint.SIGN_UP;
+  console.log('getting', email, password);
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_UP;
   const data = {
     email,
     password
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(url, data);
-  console.log(res);
+  const token = res.headers['x-auth'].replace('Bearer ', '');
+  res.data['xToken'] = token;
+  return res.data;
 };
-const fbAuthentication = async (token, id, fbId) => {
+const signIn = async (email, password) => {
+  console.log('sign in api');
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_IN;
+  const params = {
+    email,
+    password
+  };
+  console.log('api', params);
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
+    params
+  });
+  const token = res.headers['x-auth'].replace('Bearer ', '');
+  res.data['xToken'] = token;
+  return res.data;
+};
+const fbAuthentication = async (token, id, fbId, name) => {
+  console.log('name api', name);
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].FB_AUTH;
   const params = {
     token,
     id,
-    fbId
+    fbId,
+    name
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     params
   });
+  console.log('res data', res.data);
   return res.data;
 };
 const searchInterest = async (token, keyword, limit = 500) => {
@@ -265,6 +288,19 @@ const getInterestStats = async (adId, token) => {
   });
   return res.data;
 };
+const userLogout = async token => {
+  console.log('user token', token);
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].LOG_OUT;
+  console.log('url', url);
+  const headers = {
+    'Authorization': token
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
+    headers
+  });
+  console.log('res', res);
+  return res.data;
+};
 
 /***/ }),
 
@@ -286,7 +322,9 @@ const endpoints = {
   GET_ADSETS: campaignId => `${"http://localhost:9090/"}facebook/adsets/${campaignId}`,
   GET_ADS: adsetId => `${"http://localhost:9090/"}facebook/ads/${adsetId}`,
   GET_STATS: adId => `${"http://localhost:9090/"}facebook/stats/${adId}`,
-  SIGN_UP: `${"http://localhost:9090/"}signup`
+  SIGN_UP: `${"http://localhost:9090/"}users/signup`,
+  SIGN_IN: `${"http://localhost:9090/"}users/signin`,
+  LOG_OUT: `${"http://localhost:9090/"}users/logout`
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -317,13 +355,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var styled_jsx_style__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(styled_jsx_style__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-facebook-login/dist/facebook-login-render-props */ "react-facebook-login/dist/facebook-login-render-props");
-/* harmony import */ var react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-redux */ "react-redux");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _redux_user_user_actions__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../redux/user/user-actions */ "./redux/user/user-actions.js");
 /* harmony import */ var _components_sideBar__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/sideBar */ "./components/sideBar.js");
-/* harmony import */ var _header__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./header */ "./components/header.js");
+/* harmony import */ var _components_onboarding__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/onboarding */ "./components/onboarding.js");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react-toastify */ "react-toastify");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(react_toastify__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var react_toastify_scss_main_scss__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react-toastify/scss/main.scss */ "./node_modules/react-toastify/scss/main.scss");
+/* harmony import */ var react_toastify_scss_main_scss__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(react_toastify_scss_main_scss__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _header__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./header */ "./components/header.js");
 
 
 
@@ -340,12 +383,36 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement;
 
 
 
+
+
+
+
 const DashboardLayout = props => {
   const {
     authFb,
     user,
-    fbToken
+    fbToken,
+    userError,
+    searchError
   } = props;
+  const router = Object(next_router__WEBPACK_IMPORTED_MODULE_8__["useRouter"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_7__["useEffect"])(() => {
+    if (searchError || userError) {
+      react_toastify__WEBPACK_IMPORTED_MODULE_13__["toast"].error(`There was an error.`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+    }
+  }, [userError, searchError]);
+  Object(react__WEBPACK_IMPORTED_MODULE_7__["useEffect"])(() => {
+    if (user == null) {
+      router.push("/signup");
+    }
+  }, [props.user]);
 
   const faceAuthStart = () => {
     console.log("#### FB auth start");
@@ -360,40 +427,44 @@ const DashboardLayout = props => {
     authFb(accessToken, user.id, userID);
   };
 
-  const actions = [__jsx(react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_8___default.a, {
-    appId: "539788533190548",
-    autoLoad: true,
-    fields: "name,email,id",
-    onClick: faceAuthStart,
-    scope: "ads_management, email",
-    callback: responseFacebook,
-    render: renderProps => __jsx(antd_lib_button__WEBPACK_IMPORTED_MODULE_5___default.a, {
-      disabled: !!fbToken,
-      type: "primary",
-      onClick: renderProps.onClick,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 36
-      },
-      __self: undefined
-    }, "Connect Facebook"),
+  const actions = [__jsx(antd_lib_button__WEBPACK_IMPORTED_MODULE_5___default.a, {
+    style: {
+      background: "#f86326",
+      border: "none",
+      color: "white"
+    },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 28
+      lineNumber: 56
     },
     __self: undefined
-  })];
+  }, "Get life time access")];
   return __jsx("div", {
     className: "jsx-747387214" + " " + "layout",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 47
+      lineNumber: 59
     },
     __self: undefined
-  }, __jsx(antd_lib_row__WEBPACK_IMPORTED_MODULE_1___default.a, {
+  }, __jsx(react_toastify__WEBPACK_IMPORTED_MODULE_13__["ToastContainer"], {
+    position: "top-left",
+    autoClose: 5000,
+    hideProgressBar: false,
+    newestOnTop: false,
+    closeOnClick: true,
+    rtl: false,
+    pauseOnVisibilityChange: true,
+    draggable: true,
+    pauseOnHover: true,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 48
+      lineNumber: 60
+    },
+    __self: undefined
+  }), __jsx(antd_lib_row__WEBPACK_IMPORTED_MODULE_1___default.a, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 71
     },
     __self: undefined
   }, __jsx(antd_lib_col__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -404,13 +475,13 @@ const DashboardLayout = props => {
     span: 4,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 49
+      lineNumber: 72
     },
     __self: undefined
   }, __jsx(_components_sideBar__WEBPACK_IMPORTED_MODULE_11__["default"], {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 49
+      lineNumber: 72
     },
     __self: undefined
   })), __jsx(antd_lib_col__WEBPACK_IMPORTED_MODULE_3___default.a, {
@@ -422,60 +493,68 @@ const DashboardLayout = props => {
     className: "child-container",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 50
+      lineNumber: 73
     },
     __self: undefined
   }, __jsx("div", {
     className: "jsx-747387214" + " " + "header",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 51
+      lineNumber: 74
     },
     __self: undefined
-  }, __jsx(_header__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, __jsx(_header__WEBPACK_IMPORTED_MODULE_15__["default"], {
     actions: actions,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 52
+      lineNumber: 75
     },
     __self: undefined
   })), __jsx("div", {
     className: "jsx-747387214" + " " + "children",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 54
+      lineNumber: 77
     },
     __self: undefined
-  }, props.children), __jsx("footer", {
+  }, props.children), !fbToken && user ? __jsx(_components_onboarding__WEBPACK_IMPORTED_MODULE_12__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 82
+    },
+    __self: undefined
+  }) : "", __jsx("footer", {
     className: "jsx-747387214",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 58
+      lineNumber: 85
     },
     __self: undefined
   }, __jsx("div", {
     className: "jsx-747387214" + " " + "footer",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 59
+      lineNumber: 86
     },
     __self: undefined
   }, __jsx("p", {
     className: "jsx-747387214" + " " + "footer-item",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 60
+      lineNumber: 87
     },
     __self: undefined
   }, "\xA9 2010 - ", new Date().getFullYear(), ", Getch."))))), __jsx(styled_jsx_style__WEBPACK_IMPORTED_MODULE_6___default.a, {
     id: "747387214",
     __self: undefined
-  }, ".layout.jsx-747387214{position:relative;min-height:100vh;}.layout-body.jsx-747387214{position:relative;}.child-container.jsx-747387214{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;}.children.jsx-747387214{-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;}.header.jsx-747387214{position:fixed;top:0;width:81%;background-color:white;z-index:100;}footer.jsx-747387214{margin-top:100px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;width:100%;background:white;height:50px;margin-top:50px;}.footer.jsx-747387214{position:fixed;bottom:0;width:inherit;background-color:white;color:black;text-align:center;}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL2Jlbmtpc3NpL3Byb2plY3RzL2dldGNoL2dldGNoLWZyb250ZW5kLTIuMC9jb21wb25lbnRzL2Rhc2hib2FyZExheW91dC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFpRW9CLEFBR21DLEFBS0EsQUFJTCxBQUlELEFBSUcsQUFRRSxBQVVGLGVBakJULEFBa0JHLEVBVkksQ0F6QkksQUFLckIsR0FhYyxHQWtCSSxPQWpCUyxJQWxCM0IsR0FvQzJCLGdCQWpCWCxPQWtCQSxLQWpCaEIsS0FSQSxFQTBCc0IsQ0E5QnRCLGlCQWlCMkIsQUFjekIsbUdBYmEsV0FDTSxpQkFDTCxZQUNJLGdCQUNwQiIsImZpbGUiOiIvaG9tZS9iZW5raXNzaS9wcm9qZWN0cy9nZXRjaC9nZXRjaC1mcm9udGVuZC0yLjAvY29tcG9uZW50cy9kYXNoYm9hcmRMYXlvdXQuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBSb3csIENvbCB9IGZyb20gJ2FudGQnO1xuaW1wb3J0IEZhY2Vib29rTG9naW4gZnJvbSBcInJlYWN0LWZhY2Vib29rLWxvZ2luL2Rpc3QvZmFjZWJvb2stbG9naW4tcmVuZGVyLXByb3BzXCI7XG5pbXBvcnQgeyBCdXR0b24gIH0gZnJvbSBcImFudGRcIjtcbmltcG9ydCB7IGNvbm5lY3QgfSBmcm9tIFwicmVhY3QtcmVkdXhcIjtcbmltcG9ydCB7IGF1dGhGYWNlYm9vayB9IGZyb20gXCIuLi9yZWR1eC91c2VyL3VzZXItYWN0aW9uc1wiO1xuaW1wb3J0IFNpZGVCYXIgZnJvbSBcIi4uL2NvbXBvbmVudHMvc2lkZUJhclwiO1xuXG5pbXBvcnQgSGVhZGVyIGZyb20gXCIuL2hlYWRlclwiO1xuXG5cbmNvbnN0IERhc2hib2FyZExheW91dCA9IHByb3BzID0+IHtcbiAgICBjb25zdCB7XG4gICAgICAgIGF1dGhGYixcbiAgICAgICAgdXNlcixcbiAgICAgICAgZmJUb2tlblxuICAgICAgfSA9IHByb3BzO1xuICAgIGNvbnN0IGZhY2VBdXRoU3RhcnQgPSAoKSA9PiB7XG4gICAgICAgIGNvbnNvbGUubG9nKFwiIyMjIyBGQiBhdXRoIHN0YXJ0XCIpO1xuICAgIH07XG5cbiAgICBjb25zdCByZXNwb25zZUZhY2Vib29rID0gYXN5bmMgcmVzID0+IHtcbiAgICAgICAgY29uc3QgeyBhY2Nlc3NUb2tlbiwgdXNlcklEIH0gPSByZXM7XG4gICAgICAgIGNvbnNvbGUubG9nKCdmYicscmVzKVxuICAgICAgICBhdXRoRmIoYWNjZXNzVG9rZW4sIHVzZXIuaWQsIHVzZXJJRCk7XG4gICAgfTtcblxuICAgIGNvbnN0IGFjdGlvbnMgPSBbXG4gICAgICAgIDxGYWNlYm9va0xvZ2luXG4gICAgICAgICAgYXBwSWQ9e3Byb2Nlc3MuZW52LkZCX0FQUF9JRH1cbiAgICAgICAgICBhdXRvTG9hZD17dHJ1ZX1cbiAgICAgICAgICBmaWVsZHM9XCJuYW1lLGVtYWlsLGlkXCJcbiAgICAgICAgICBvbkNsaWNrPXtmYWNlQXV0aFN0YXJ0fVxuICAgICAgICAgIHNjb3BlPVwiYWRzX21hbmFnZW1lbnQsIGVtYWlsXCJcbiAgICAgICAgICBjYWxsYmFjaz17cmVzcG9uc2VGYWNlYm9va31cbiAgICAgICAgICByZW5kZXI9e3JlbmRlclByb3BzID0+IChcbiAgICAgICAgICAgIDxCdXR0b25cbiAgICAgICAgICAgICAgZGlzYWJsZWQ9eyEhZmJUb2tlbn1cbiAgICAgICAgICAgICAgdHlwZT1cInByaW1hcnlcIlxuICAgICAgICAgICAgICBvbkNsaWNrPXtyZW5kZXJQcm9wcy5vbkNsaWNrfVxuICAgICAgICAgICAgPlxuICAgICAgICAgICAgICBDb25uZWN0IEZhY2Vib29rXG4gICAgICAgICAgICA8L0J1dHRvbj5cbiAgICAgICAgICApfVxuICAgICAgICAvPlxuICAgIF1cbiByZXR1cm4gKFxuICAgICA8ZGl2IGNsYXNzTmFtZT1cImxheW91dFwiPlxuICAgICAgICAgPFJvdz5cbiAgICAgICAgICAgIDxDb2wgc3R5bGU9e3twb3NpdGlvbjogJ3JlbGF0aXZlJywgaGVpZ2h0OiAnMTAwdmgnfX0gc3Bhbj17NH0+PFNpZGVCYXIvPjwvQ29sPlxuICAgICAgICAgICAgPENvbCBzdHlsZT17e3BhZGRpbmc6ICcwIDIwcHggMCAyMHB4JywgbWluSGVpZ2h0OiAnMTAwdmgnfX0gc3Bhbj17MjB9IGNsYXNzTmFtZT1cImNoaWxkLWNvbnRhaW5lclwiPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJoZWFkZXJcIj5cbiAgICAgICAgICAgICAgICA8SGVhZGVyIGFjdGlvbnM9e2FjdGlvbnN9IC8+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiY2hpbGRyZW5cIj5cbiAgICAgICAgICAgICAgICB7cHJvcHMuY2hpbGRyZW59XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgIDxmb290ZXI+XG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmb290ZXJcIj5cbiAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwiZm9vdGVyLWl0ZW1cIj4mY29weTsgMjAxMCAtIHtuZXcgRGF0ZSgpLmdldEZ1bGxZZWFyKCl9LCBHZXRjaC48L3A+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Zvb3Rlcj5cbiAgICAgICAgICAgIDwvQ29sPlxuICAgICAgICAgPC9Sb3c+XG5cbiAgICAgICAgPHN0eWxlIGpzeD57YFxuICAgICAgICAgICAgLmxheW91dCB7XG4gICAgICAgICAgICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgICAgICAgICAgIG1pbi1oZWlnaHQ6IDEwMHZoO1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAubGF5b3V0LWJvZHkge1xuICAgICAgICAgICAgICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLmNoaWxkLWNvbnRhaW5lciB7XG4gICAgICAgICAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLmNoaWxkcmVuIHtcbiAgICAgICAgICAgICAgICBmbGV4LWdyb3c6IDE7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIC5oZWFkZXIge1xuICAgICAgICAgICAgICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICAgICAgICAgICAgICB0b3A6IDA7XG4gICAgICAgICAgICAgICAgd2lkdGg6IDgxJTtcbiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgICAgICAgICAgICB6LWluZGV4OiAxMDA7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGZvb3RlciB7XG4gICAgICAgICAgICAgICAgbWFyZ2luLXRvcDogMTAwcHg7XG4gICAgICAgICAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTtcbiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kOiB3aGl0ZTtcbiAgICAgICAgICAgICAgICBoZWlnaHQ6IDUwcHg7XG4gICAgICAgICAgICAgICAgbWFyZ2luLXRvcDogNTBweDtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLmZvb3RlciB7XG4gICAgICAgICAgICAgICAgcG9zaXRpb246IGZpeGVkO1xuICAgICAgICAgICAgICAgIGJvdHRvbTogMDtcbiAgICAgICAgICAgICAgICB3aWR0aDogaW5oZXJpdDtcbiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgICAgICAgICAgICBjb2xvcjogYmxhY2s7XG4gICAgICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgICAgICAgICB9XG5cbiAgICAgICAgYH08L3N0eWxlPlxuICAgICA8L2Rpdj5cbiApXG59XG5cbmNvbnN0IG1hcFN0YXRlVG9Qcm9wcyA9IHN0YXRlID0+ICh7XG4gICAgdXNlcjogc3RhdGUudXNlci5jdXJyZW50VXNlcixcbiAgICBmYlRva2VuOiBzdGF0ZS51c2VyLmZiVG9rZW5cbiAgfSk7XG5cbiAgY29uc3QgbWFwRGlzcGF0Y2hUb1Byb3BzID0gZGlzcGF0Y2ggPT4gKHtcbiAgICBhdXRoRmI6ICh0b2tlbiwgaWQsIGZiSWQpID0+IGRpc3BhdGNoKGF1dGhGYWNlYm9vayh7IHRva2VuLCBpZCwgZmJJZH0pKVxuICB9KTtcbiAgXG5cbmV4cG9ydCBkZWZhdWx0IGNvbm5lY3QobWFwU3RhdGVUb1Byb3BzLCBtYXBEaXNwYXRjaFRvUHJvcHMpKERhc2hib2FyZExheW91dCkiXX0= */\n/*@ sourceURL=/home/benkissi/projects/getch/getch-frontend-2.0/components/dashboardLayout.js */"));
+  }, ".layout.jsx-747387214{position:relative;min-height:100vh;}.layout-body.jsx-747387214{position:relative;}.child-container.jsx-747387214{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;}.children.jsx-747387214{-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;}.header.jsx-747387214{position:fixed;top:0;width:81%;background-color:white;z-index:100;}footer.jsx-747387214{margin-top:100px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;width:100%;background:white;height:50px;margin-top:50px;}.footer.jsx-747387214{position:fixed;bottom:0;width:inherit;background-color:white;color:black;text-align:center;}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL2Jlbmtpc3NpL3Byb2plY3RzL2dldGNoL2dldGNoLWZyb250ZW5kLTIuMC9jb21wb25lbnRzL2Rhc2hib2FyZExheW91dC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUE0Rm9CLEFBR21DLEFBS0EsQUFJTCxBQUlELEFBSUcsQUFRRSxBQVVGLGVBakJULEFBa0JHLEVBVkksQ0F6QkksQUFLckIsR0FhYyxHQWtCSSxPQWpCUyxJQWxCM0IsR0FvQzJCLGdCQWpCWCxPQWtCQSxLQWpCaEIsS0FSQSxFQTBCc0IsQ0E5QnRCLGlCQWlCMkIsQUFjekIsbUdBYmEsV0FDTSxpQkFDTCxZQUNJLGdCQUNwQiIsImZpbGUiOiIvaG9tZS9iZW5raXNzaS9wcm9qZWN0cy9nZXRjaC9nZXRjaC1mcm9udGVuZC0yLjAvY29tcG9uZW50cy9kYXNoYm9hcmRMYXlvdXQuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBSb3csIENvbCB9IGZyb20gJ2FudGQnO1xuaW1wb3J0IHsgdXNlUm91dGVyIH0gZnJvbSBcIm5leHQvcm91dGVyXCI7XG5pbXBvcnQgeyB1c2VFZmZlY3QgfSBmcm9tIFwicmVhY3RcIjtcbmltcG9ydCB7IEJ1dHRvbiAgfSBmcm9tIFwiYW50ZFwiO1xuaW1wb3J0IHsgY29ubmVjdCB9IGZyb20gXCJyZWFjdC1yZWR1eFwiO1xuaW1wb3J0IHsgYXV0aEZhY2Vib29rIH0gZnJvbSBcIi4uL3JlZHV4L3VzZXIvdXNlci1hY3Rpb25zXCI7XG5pbXBvcnQgU2lkZUJhciBmcm9tIFwiLi4vY29tcG9uZW50cy9zaWRlQmFyXCI7XG5pbXBvcnQgT25ib2FyZGluZyBmcm9tIFwiLi4vY29tcG9uZW50cy9vbmJvYXJkaW5nXCJcblxuaW1wb3J0IHsgVG9hc3RDb250YWluZXIsIHRvYXN0IH0gZnJvbSBcInJlYWN0LXRvYXN0aWZ5XCI7XG5pbXBvcnQgXCJyZWFjdC10b2FzdGlmeS9zY3NzL21haW4uc2Nzc1wiO1xuXG5pbXBvcnQgSGVhZGVyIGZyb20gXCIuL2hlYWRlclwiO1xuXG5cbmNvbnN0IERhc2hib2FyZExheW91dCA9IHByb3BzID0+IHtcbiAgICBjb25zdCB7XG4gICAgICAgIGF1dGhGYixcbiAgICAgICAgdXNlcixcbiAgICAgICAgZmJUb2tlbixcbiAgICAgICAgdXNlckVycm9yLFxuICAgICAgICBzZWFyY2hFcnJvclxuICAgICAgfSA9IHByb3BzO1xuICAgICAgY29uc3Qgcm91dGVyID0gdXNlUm91dGVyKCk7XG5cbiAgICAgIHVzZUVmZmVjdCgoKSA9PiB7XG4gICAgICAgIGlmKHNlYXJjaEVycm9yIHx8IHVzZXJFcnJvcil7XG4gICAgICAgICAgICB0b2FzdC5lcnJvcihgVGhlcmUgd2FzIGFuIGVycm9yLmAsIHtcbiAgICAgICAgICAgICAgICBwb3NpdGlvbjogXCJ0b3AtcmlnaHRcIixcbiAgICAgICAgICAgICAgICBhdXRvQ2xvc2U6IDUwMDAsXG4gICAgICAgICAgICAgICAgaGlkZVByb2dyZXNzQmFyOiBmYWxzZSxcbiAgICAgICAgICAgICAgICBjbG9zZU9uQ2xpY2s6IHRydWUsXG4gICAgICAgICAgICAgICAgcGF1c2VPbkhvdmVyOiB0cnVlLFxuICAgICAgICAgICAgICAgIGRyYWdnYWJsZTogdHJ1ZVxuICAgICAgICAgICAgICB9KTtcbiAgICAgICAgfVxuICAgICAgfSwgW3VzZXJFcnJvciwgc2VhcmNoRXJyb3JdKVxuXG4gICAgICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgICAgICBpZih1c2VyID09IG51bGwpe1xuICAgICAgICAgICAgcm91dGVyLnB1c2goXCIvc2lnbnVwXCIpO1xuICAgICAgICB9XG4gICAgICB9LCBbcHJvcHMudXNlcl0pXG5cbiAgICBjb25zdCBmYWNlQXV0aFN0YXJ0ID0gKCkgPT4ge1xuICAgICAgICBjb25zb2xlLmxvZyhcIiMjIyMgRkIgYXV0aCBzdGFydFwiKTtcbiAgICB9O1xuXG4gICAgY29uc3QgcmVzcG9uc2VGYWNlYm9vayA9IGFzeW5jIHJlcyA9PiB7XG4gICAgICAgIGNvbnN0IHsgYWNjZXNzVG9rZW4sIHVzZXJJRCB9ID0gcmVzO1xuICAgICAgICBjb25zb2xlLmxvZygnZmInLHJlcylcbiAgICAgICAgYXV0aEZiKGFjY2Vzc1Rva2VuLCB1c2VyLmlkLCB1c2VySUQpO1xuICAgIH07XG5cbiAgICBjb25zdCBhY3Rpb25zID0gW1xuICAgICAgICA8QnV0dG9uIHN0eWxlPXt7YmFja2dyb3VuZDogXCIjZjg2MzI2XCIsIGJvcmRlcjogXCJub25lXCIsIGNvbG9yOiBcIndoaXRlXCJ9fT5HZXQgbGlmZSB0aW1lIGFjY2VzczwvQnV0dG9uPixcbiAgICBdXG4gcmV0dXJuIChcbiAgICAgPGRpdiBjbGFzc05hbWU9XCJsYXlvdXRcIj5cbiAgICAgICAgIDxUb2FzdENvbnRhaW5lclxuICAgICAgICAgIHBvc2l0aW9uPVwidG9wLWxlZnRcIlxuICAgICAgICAgIGF1dG9DbG9zZT17NTAwMH1cbiAgICAgICAgICBoaWRlUHJvZ3Jlc3NCYXI9e2ZhbHNlfVxuICAgICAgICAgIG5ld2VzdE9uVG9wPXtmYWxzZX1cbiAgICAgICAgICBjbG9zZU9uQ2xpY2tcbiAgICAgICAgICBydGw9e2ZhbHNlfVxuICAgICAgICAgIHBhdXNlT25WaXNpYmlsaXR5Q2hhbmdlXG4gICAgICAgICAgZHJhZ2dhYmxlXG4gICAgICAgICAgcGF1c2VPbkhvdmVyXG4gICAgICAgIC8+XG4gICAgICAgICA8Um93PlxuICAgICAgICAgICAgPENvbCBzdHlsZT17e3Bvc2l0aW9uOiAncmVsYXRpdmUnLCBoZWlnaHQ6ICcxMDB2aCd9fSBzcGFuPXs0fT48U2lkZUJhci8+PC9Db2w+XG4gICAgICAgICAgICA8Q29sIHN0eWxlPXt7cGFkZGluZzogJzAgMjBweCAwIDIwcHgnLCBtaW5IZWlnaHQ6ICcxMDB2aCd9fSBzcGFuPXsyMH0gY2xhc3NOYW1lPVwiY2hpbGQtY29udGFpbmVyXCI+XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImhlYWRlclwiPlxuICAgICAgICAgICAgICAgIDxIZWFkZXIgYWN0aW9ucz17YWN0aW9uc30gLz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJjaGlsZHJlblwiPlxuICAgICAgICAgICAgICAgIHtwcm9wcy5jaGlsZHJlbn1cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICFmYlRva2VuICYmIHVzZXIgP1xuICAgICAgICAgICAgICAgIDxPbmJvYXJkaW5nLz46IFwiXCJcbiAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgIDxmb290ZXI+XG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmb290ZXJcIj5cbiAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwiZm9vdGVyLWl0ZW1cIj4mY29weTsgMjAxMCAtIHtuZXcgRGF0ZSgpLmdldEZ1bGxZZWFyKCl9LCBHZXRjaC48L3A+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Zvb3Rlcj5cbiAgICAgICAgICAgIDwvQ29sPlxuICAgICAgICAgPC9Sb3c+XG5cbiAgICAgICAgPHN0eWxlIGpzeD57YFxuICAgICAgICAgICAgLmxheW91dCB7XG4gICAgICAgICAgICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgICAgICAgICAgIG1pbi1oZWlnaHQ6IDEwMHZoO1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAubGF5b3V0LWJvZHkge1xuICAgICAgICAgICAgICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLmNoaWxkLWNvbnRhaW5lciB7XG4gICAgICAgICAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLmNoaWxkcmVuIHtcbiAgICAgICAgICAgICAgICBmbGV4LWdyb3c6IDE7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIC5oZWFkZXIge1xuICAgICAgICAgICAgICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICAgICAgICAgICAgICB0b3A6IDA7XG4gICAgICAgICAgICAgICAgd2lkdGg6IDgxJTtcbiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgICAgICAgICAgICB6LWluZGV4OiAxMDA7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIGZvb3RlciB7XG4gICAgICAgICAgICAgICAgbWFyZ2luLXRvcDogMTAwcHg7XG4gICAgICAgICAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTtcbiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kOiB3aGl0ZTtcbiAgICAgICAgICAgICAgICBoZWlnaHQ6IDUwcHg7XG4gICAgICAgICAgICAgICAgbWFyZ2luLXRvcDogNTBweDtcbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgLmZvb3RlciB7XG4gICAgICAgICAgICAgICAgcG9zaXRpb246IGZpeGVkO1xuICAgICAgICAgICAgICAgIGJvdHRvbTogMDtcbiAgICAgICAgICAgICAgICB3aWR0aDogaW5oZXJpdDtcbiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICAgICAgICAgICAgICBjb2xvcjogYmxhY2s7XG4gICAgICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgICAgICAgICB9XG5cbiAgICAgICAgYH08L3N0eWxlPlxuICAgICA8L2Rpdj5cbiApXG59XG5cbmNvbnN0IG1hcFN0YXRlVG9Qcm9wcyA9IHN0YXRlID0+ICh7XG4gICAgdXNlcjogc3RhdGUudXNlci5jdXJyZW50VXNlcixcbiAgICBmYlRva2VuOiBzdGF0ZS51c2VyLmZiVG9rZW4sXG4gICAgdXNlckVycm9yOiBzdGF0ZS51c2VyLmVycm9yLFxuICAgIHNlYXJjaEVycm9yOiBzdGF0ZS5zZWFyY2guZXJyb3JcbiAgfSk7XG5cbiAgY29uc3QgbWFwRGlzcGF0Y2hUb1Byb3BzID0gZGlzcGF0Y2ggPT4gKHtcbiAgICBhdXRoRmI6ICh0b2tlbiwgaWQsIGZiSWQpID0+IGRpc3BhdGNoKGF1dGhGYWNlYm9vayh7IHRva2VuLCBpZCwgZmJJZH0pKVxuICB9KTtcbiAgXG5cbmV4cG9ydCBkZWZhdWx0IGNvbm5lY3QobWFwU3RhdGVUb1Byb3BzLCBtYXBEaXNwYXRjaFRvUHJvcHMpKERhc2hib2FyZExheW91dCkiXX0= */\n/*@ sourceURL=/home/benkissi/projects/getch/getch-frontend-2.0/components/dashboardLayout.js */"));
 };
 
 const mapStateToProps = state => ({
   user: state.user.currentUser,
-  fbToken: state.user.fbToken
+  fbToken: state.user.fbToken,
+  userError: state.user.error,
+  searchError: state.search.error
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -503,50 +582,267 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var styled_jsx_style__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(styled_jsx_style__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/router */ "next/router");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_2__);
 var _jsxFileName = "/home/benkissi/projects/getch/getch-frontend-2.0/components/header.js";
 
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
 
+
 const Header = props => {
+  const handleSettingsClick = () => {
+    next_router__WEBPACK_IMPORTED_MODULE_2___default.a.push('/settings');
+  };
+
   return __jsx("div", {
     id: "wrapper",
-    className: "jsx-1118847237",
+    className: "jsx-1448644373",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 3
+      lineNumber: 8
     },
     __self: undefined
   }, __jsx("div", {
-    className: "jsx-1118847237",
+    className: "jsx-1448644373",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 4
+      lineNumber: 9
     },
     __self: undefined
   }, "Header"), __jsx("div", {
-    id: "actions",
-    className: "jsx-1118847237",
+    className: "jsx-1448644373" + " " + "count",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 7
+      lineNumber: 12
+    },
+    __self: undefined
+  }, __jsx("p", {
+    className: "jsx-1448644373",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 13
+    },
+    __self: undefined
+  }, "3 free search: ", __jsx("span", {
+    className: "jsx-1448644373",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 13
+    },
+    __self: undefined
+  }, "You have 2 left"))), __jsx("div", {
+    id: "actions",
+    className: "jsx-1448644373",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 15
     },
     __self: undefined
   }, props.actions ? props.actions.map((action, index) => __jsx("div", {
     key: index,
-    className: "jsx-1118847237",
+    className: "jsx-1448644373",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 11
+      lineNumber: 19
     },
     __self: undefined
-  }, action)) : ''), __jsx(styled_jsx_style__WEBPACK_IMPORTED_MODULE_0___default.a, {
-    id: "1118847237",
+  }, action)) : '', __jsx("div", {
+    onClick: handleSettingsClick,
+    className: "jsx-1448644373" + " " + "profile-wrapper",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 22
+    },
     __self: undefined
-  }, "#wrapper.jsx-1118847237{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;width:100%;padding:10px 0 10px 0;}#actions.jsx-1118847237{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex:2;-ms-flex:2;flex:2;-webkit-box-pack:end;-webkit-justify-content:flex-end;-ms-flex-pack:end;justify-content:flex-end;}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL2Jlbmtpc3NpL3Byb2plY3RzL2dldGNoL2dldGNoLWZyb250ZW5kLTIuMC9jb21wb25lbnRzL2hlYWRlci5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFlb0IsQUFHOEIsQUFNQSwwRUFMRixBQU1KLFdBTGUsc0JBQzFCLEFBSzZCLGlHQUM3QiIsImZpbGUiOiIvaG9tZS9iZW5raXNzaS9wcm9qZWN0cy9nZXRjaC9nZXRjaC1mcm9udGVuZC0yLjAvY29tcG9uZW50cy9oZWFkZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCBIZWFkZXIgPSBwcm9wcyA9PiB7XG4gICAgcmV0dXJuIChcbiAgICAgICAgPGRpdiBpZD1cIndyYXBwZXJcIj5cbiAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgSGVhZGVyXG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgaWQ9XCJhY3Rpb25zXCI+XG4gICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgIHByb3BzLmFjdGlvbnMgPyBcbiAgICAgICAgICAgICAgICAgICAgcHJvcHMuYWN0aW9ucy5tYXAoKGFjdGlvbiwgaW5kZXgpID0+IChcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBrZXk9e2luZGV4fT57YWN0aW9ufTwvZGl2PlxuICAgICAgICAgICAgICAgICAgICApKTonJ1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgIDxzdHlsZSBqc3g+e2BcbiAgICAgICAgICAgICN3cmFwcGVyIHtcbiAgICAgICAgICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICAgICAgICAgIHdpZHRoOiAxMDAlO1xuICAgICAgICAgICAgICAgIHBhZGRpbmc6IDEwcHggMCAxMHB4IDA7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgICNhY3Rpb25zIHtcbiAgICAgICAgICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICAgICAgICAgIGZsZXg6IDI7XG4gICAgICAgICAgICAgICAganVzdGlmeS1jb250ZW50OiBmbGV4LWVuZDtcbiAgICAgICAgICAgIH1cbiAgICAgICAgYH08L3N0eWxlPlxuICAgICAgICA8L2Rpdj5cbiAgICApXG59XG5cbmV4cG9ydCBkZWZhdWx0IEhlYWRlciJdfQ== */\n/*@ sourceURL=/home/benkissi/projects/getch/getch-frontend-2.0/components/header.js */"));
+  }, __jsx("img", {
+    src: "/images/user.svg",
+    className: "jsx-1448644373",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 22
+    },
+    __self: undefined
+  }))), __jsx(styled_jsx_style__WEBPACK_IMPORTED_MODULE_0___default.a, {
+    id: "1448644373",
+    __self: undefined
+  }, "#wrapper.jsx-1448644373{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;width:100%;padding:10px 0 10px 0;}#actions.jsx-1448644373{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}#actions.jsx-1448644373>*.jsx-1448644373{margin:0 5px 0 5px;}.count.jsx-1448644373{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-left:auto;margin-right:auto;}.count.jsx-1448644373 p.jsx-1448644373{margin:0;}.count.jsx-1448644373 span.jsx-1448644373{font-weight:bold;}.profile-wrapper.jsx-1448644373{width:50px;height:30px;}.profile-wrapper.jsx-1448644373 img.jsx-1448644373{width:100%;height:100%;cursor:pointer;}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL2Jlbmtpc3NpL3Byb2plY3RzL2dldGNoL2dldGNoLWZyb250ZW5kLTIuMC9jb21wb25lbnRzL2hlYWRlci5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUF3Qm9CLEFBRzhCLEFBTUEsQUFNTSxBQUlOLEFBTUosQUFJUSxBQUdKLEFBS0EsU0FYakIsRUFPa0IsQUFLQSxNQVJsQixFQWRBLElBa0JFLEFBS21CLGVBQ25CLG9DQXBDYSxBQU1RLEFBVUYsV0FmSyxNQWdCSixnQkFmdEIsRUFnQkEsMERBVkEiLCJmaWxlIjoiL2hvbWUvYmVua2lzc2kvcHJvamVjdHMvZ2V0Y2gvZ2V0Y2gtZnJvbnRlbmQtMi4wL2NvbXBvbmVudHMvaGVhZGVyLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJvdXRlciBmcm9tICduZXh0L3JvdXRlcidcbmNvbnN0IEhlYWRlciA9IHByb3BzID0+IHtcbiAgICBjb25zdCBoYW5kbGVTZXR0aW5nc0NsaWNrID0gKCkgPT4ge1xuICAgICAgICBSb3V0ZXIucHVzaCgnL3NldHRpbmdzJylcbiAgICB9XG5cbiAgICByZXR1cm4gKFxuICAgICAgICA8ZGl2IGlkPVwid3JhcHBlclwiPlxuICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgICBIZWFkZXJcbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJjb3VudFwiPlxuICAgICAgICAgICAgICAgIDxwPjMgZnJlZSBzZWFyY2g6IDxzcGFuPllvdSBoYXZlIDIgbGVmdDwvc3Bhbj48L3A+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgaWQ9XCJhY3Rpb25zXCI+XG4gICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgIHByb3BzLmFjdGlvbnMgPyBcbiAgICAgICAgICAgICAgICAgICAgcHJvcHMuYWN0aW9ucy5tYXAoKGFjdGlvbiwgaW5kZXgpID0+IChcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBrZXk9e2luZGV4fT57YWN0aW9ufTwvZGl2PlxuICAgICAgICAgICAgICAgICAgICApKTonJ1xuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInByb2ZpbGUtd3JhcHBlclwiIG9uQ2xpY2s9e2hhbmRsZVNldHRpbmdzQ2xpY2t9PjxpbWcgc3JjPVwiL2ltYWdlcy91c2VyLnN2Z1wiLz48L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgIDxzdHlsZSBqc3g+e2BcbiAgICAgICAgICAgICN3cmFwcGVyIHtcbiAgICAgICAgICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICAgICAgICAgIHdpZHRoOiAxMDAlO1xuICAgICAgICAgICAgICAgIHBhZGRpbmc6IDEwcHggMCAxMHB4IDA7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgICNhY3Rpb25zIHtcbiAgICAgICAgICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICAgICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG5cbiAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgI2FjdGlvbnMgPiAqIHtcbiAgICAgICAgICAgICAgICBtYXJnaW46IDAgNXB4IDAgNXB4O1xuICAgICAgICAgICAgfVxuXG4gICAgICAgICAgICAuY291bnR7XG4gICAgICAgICAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgICAgICAgICBtYXJnaW4tbGVmdDogYXV0bztcbiAgICAgICAgICAgICAgICBtYXJnaW4tcmlnaHQ6IGF1dG87XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIC5jb3VudCBwIHtcbiAgICAgICAgICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIC5jb3VudCBzcGFuIHtcbiAgICAgICAgICAgICAgICBmb250LXdlaWdodDogYm9sZDtcbiAgICAgICAgICAgIH1cbiAgICAgICAgICAgIC5wcm9maWxlLXdyYXBwZXIge1xuICAgICAgICAgICAgICAgICAgd2lkdGg6IDUwcHg7XG4gICAgICAgICAgICAgICAgICBoZWlnaHQ6IDMwcHg7XG4gICAgICAgICAgICAgIH1cblxuICAgICAgICAgICAgICAucHJvZmlsZS13cmFwcGVyIGltZyB7XG4gICAgICAgICAgICAgICAgICB3aWR0aDogMTAwJTtcbiAgICAgICAgICAgICAgICAgIGhlaWdodDogMTAwJTtcbiAgICAgICAgICAgICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgICAgICAgfVxuICAgICAgICBgfTwvc3R5bGU+XG4gICAgICAgIDwvZGl2PlxuICAgIClcbn1cblxuZXhwb3J0IGRlZmF1bHQgSGVhZGVyIl19 */\n/*@ sourceURL=/home/benkissi/projects/getch/getch-frontend-2.0/components/header.js */"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Header);
+
+/***/ }),
+
+/***/ "./components/onboarding.js":
+/*!**********************************!*\
+  !*** ./components/onboarding.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var antd_lib_modal_style__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! antd/lib/modal/style */ "antd/lib/modal/style");
+/* harmony import */ var antd_lib_modal_style__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(antd_lib_modal_style__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var antd_lib_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd/lib/modal */ "antd/lib/modal");
+/* harmony import */ var antd_lib_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd_lib_modal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var antd_lib_button_style__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd/lib/button/style */ "antd/lib/button/style");
+/* harmony import */ var antd_lib_button_style__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(antd_lib_button_style__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var antd_lib_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd/lib/button */ "antd/lib/button");
+/* harmony import */ var antd_lib_button__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(antd_lib_button__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var styled_jsx_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! styled-jsx/style */ "styled-jsx/style");
+/* harmony import */ var styled_jsx_style__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(styled_jsx_style__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-facebook-login/dist/facebook-login-render-props */ "react-facebook-login/dist/facebook-login-render-props");
+/* harmony import */ var react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-redux */ "react-redux");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _redux_user_user_actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../redux/user/user-actions */ "./redux/user/user-actions.js");
+
+
+
+
+var _jsxFileName = "/home/benkissi/projects/getch/getch-frontend-2.0/components/onboarding.js";
+
+
+var __jsx = react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement;
+
+
+
+
+const Onboarding = props => {
+  const {
+    authFb,
+    user,
+    fbToken
+  } = props;
+
+  const faceAuthStart = () => {
+    console.log("#### FB auth start");
+  };
+
+  const responseFacebook = async res => {
+    const {
+      accessToken,
+      userID,
+      name
+    } = res;
+    console.log('fb', res);
+    authFb(accessToken, user.id, userID, name);
+  };
+
+  return __jsx("div", {
+    className: "jsx-2292966542",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 24
+    },
+    __self: undefined
+  }, __jsx(antd_lib_modal__WEBPACK_IMPORTED_MODULE_1___default.a, {
+    visible: !!!fbToken,
+    centered: true,
+    footer: null,
+    closable: false,
+    width: 800,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 25
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "jsx-2292966542" + " " + "modal-inner",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 26
+    },
+    __self: undefined
+  }, __jsx("h2", {
+    className: "jsx-2292966542",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 27
+    },
+    __self: undefined
+  }, "Almost done"), __jsx("div", {
+    className: "jsx-2292966542" + " " + "fb",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 28
+    },
+    __self: undefined
+  }, __jsx("img", {
+    src: "/images/facebook.svg",
+    className: "jsx-2292966542",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 28
+    },
+    __self: undefined
+  })), __jsx("h3", {
+    className: "jsx-2292966542",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 29
+    },
+    __self: undefined
+  }, "Lets search Facebook"), __jsx("p", {
+    className: "jsx-2292966542",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 30
+    },
+    __self: undefined
+  }, "Connect to Facebook to begin searching for interest"), __jsx(react_facebook_login_dist_facebook_login_render_props__WEBPACK_IMPORTED_MODULE_6___default.a, {
+    appId: "539788533190548",
+    autoLoad: true,
+    fields: "name,email,id",
+    onClick: faceAuthStart,
+    scope: "ads_management, email",
+    callback: responseFacebook,
+    render: renderProps => __jsx("div", {
+      className: "jsx-2292966542" + " " + "connect",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 40
+      },
+      __self: undefined
+    }, __jsx(antd_lib_button__WEBPACK_IMPORTED_MODULE_3___default.a, {
+      disabled: !!fbToken,
+      type: "primary",
+      onClick: renderProps.onClick,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 41
+      },
+      __self: undefined
+    }, "Connect Facebook")),
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 31
+    },
+    __self: undefined
+  }))), __jsx(styled_jsx_style__WEBPACK_IMPORTED_MODULE_4___default.a, {
+    id: "2292966542",
+    __self: undefined
+  }, ".modal-inner.jsx-2292966542{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}h2.jsx-2292966542{margin-bottom:50px;}.connect.jsx-2292966542{margin-bottom:50px;}.fb.jsx-2292966542{width:50px;}.fb.jsx-2292966542 img.jsx-2292966542{width:100%;}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL2Jlbmtpc3NpL3Byb2plY3RzL2dldGNoL2dldGNoLWZyb250ZW5kLTIuMC9jb21wb25lbnRzL29uYm9hcmRpbmcuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBcURrQixBQUd3QixBQU9RLEFBSUEsQUFJUixBQUlBLFdBSGYsQUFJQSxRQVpBLEFBSUEsdURBWHdCLDhFQUNDLG1HQUNKLDZGQUNyQiIsImZpbGUiOiIvaG9tZS9iZW5raXNzaS9wcm9qZWN0cy9nZXRjaC9nZXRjaC1mcm9udGVuZC0yLjAvY29tcG9uZW50cy9vbmJvYXJkaW5nLmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IEZhY2Vib29rTG9naW4gZnJvbSBcInJlYWN0LWZhY2Vib29rLWxvZ2luL2Rpc3QvZmFjZWJvb2stbG9naW4tcmVuZGVyLXByb3BzXCI7XG5pbXBvcnQgeyBNb2RhbCwgQnV0dG9uLCBTZWxlY3QsIFJvdywgQ29sIH0gZnJvbSBcImFudGRcIjtcbmltcG9ydCB7IGNvbm5lY3QgfSBmcm9tIFwicmVhY3QtcmVkdXhcIjtcblxuaW1wb3J0IHsgYXV0aEZhY2Vib29rIH0gZnJvbSBcIi4uL3JlZHV4L3VzZXIvdXNlci1hY3Rpb25zXCI7XG5cbmNvbnN0IE9uYm9hcmRpbmcgPSAocHJvcHMpID0+IHtcbiAgICBjb25zdCB7XG4gICAgICAgIGF1dGhGYixcbiAgICAgICAgdXNlcixcbiAgICAgICAgZmJUb2tlblxuICAgICAgfSA9IHByb3BzO1xuXG4gICAgY29uc3QgZmFjZUF1dGhTdGFydCA9ICgpID0+IHtcbiAgICAgICAgY29uc29sZS5sb2coXCIjIyMjIEZCIGF1dGggc3RhcnRcIik7XG4gICAgfTtcblxuICAgIGNvbnN0IHJlc3BvbnNlRmFjZWJvb2sgPSBhc3luYyByZXMgPT4ge1xuICAgICAgICBjb25zdCB7IGFjY2Vzc1Rva2VuLCB1c2VySUQsIG5hbWUgfSA9IHJlcztcbiAgICAgICAgY29uc29sZS5sb2coJ2ZiJyxyZXMpXG4gICAgICAgIGF1dGhGYihhY2Nlc3NUb2tlbiwgdXNlci5pZCwgdXNlcklELCBuYW1lKTtcbiAgICB9O1xuICByZXR1cm4gKFxuICAgIDxkaXY+XG4gICAgICA8TW9kYWwgdmlzaWJsZT17ISghIWZiVG9rZW4pfSBjZW50ZXJlZCBmb290ZXI9e251bGx9IGNsb3NhYmxlPXtmYWxzZX0gd2lkdGg9ezgwMH0+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibW9kYWwtaW5uZXJcIj5cbiAgICAgICAgPGgyPkFsbW9zdCBkb25lPC9oMj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmYlwiPjxpbWcgc3JjPVwiL2ltYWdlcy9mYWNlYm9vay5zdmdcIi8+PC9kaXY+XG4gICAgICAgICAgPGgzPkxldHMgc2VhcmNoIEZhY2Vib29rPC9oMz5cbiAgICAgICAgICA8cD5Db25uZWN0IHRvIEZhY2Vib29rIHRvIGJlZ2luIHNlYXJjaGluZyBmb3IgaW50ZXJlc3Q8L3A+XG4gICAgICAgICAgPEZhY2Vib29rTG9naW5cbiAgICAgICAgICBhcHBJZD17cHJvY2Vzcy5lbnYuRkJfQVBQX0lEfVxuICAgICAgICAgIGF1dG9Mb2FkPXt0cnVlfVxuICAgICAgICAgIFxuICAgICAgICAgIGZpZWxkcz1cIm5hbWUsZW1haWwsaWRcIlxuICAgICAgICAgIG9uQ2xpY2s9e2ZhY2VBdXRoU3RhcnR9XG4gICAgICAgICAgc2NvcGU9XCJhZHNfbWFuYWdlbWVudCwgZW1haWxcIlxuICAgICAgICAgIGNhbGxiYWNrPXtyZXNwb25zZUZhY2Vib29rfVxuICAgICAgICAgIHJlbmRlcj17cmVuZGVyUHJvcHMgPT4gKFxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImNvbm5lY3RcIj5cbiAgICAgICAgICAgIDxCdXR0b25cbiAgICAgICAgICAgICAgZGlzYWJsZWQ9eyEhZmJUb2tlbn1cbiAgICAgICAgICAgICAgdHlwZT1cInByaW1hcnlcIlxuICAgICAgICAgICAgICBvbkNsaWNrPXtyZW5kZXJQcm9wcy5vbkNsaWNrfVxuICAgICAgICAgICAgICBcbiAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgQ29ubmVjdCBGYWNlYm9va1xuICAgICAgICAgICAgPC9CdXR0b24+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICApfVxuICAgICAgICAvPlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvTW9kYWw+XG4gICAgICA8c3R5bGUganN4PntgXG4gICAgICAgIC5tb2RhbC1pbm5lciB7XG4gICAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICAgICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIH1cblxuICAgICAgICBoMiB7XG4gICAgICAgICAgICBtYXJnaW4tYm90dG9tOiA1MHB4O1xuICAgICAgICB9XG5cbiAgICAgICAgLmNvbm5lY3Qge1xuICAgICAgICAgICAgbWFyZ2luLWJvdHRvbTogNTBweDtcbiAgICAgICAgfVxuXG4gICAgICAgIC5mYntcbiAgICAgICAgICAgIHdpZHRoOiA1MHB4O1xuICAgICAgICB9XG5cbiAgICAgICAgLmZiIGltZyB7XG4gICAgICAgICAgICB3aWR0aDogMTAwJTtcbiAgICAgICAgfVxuICAgICAgYH08L3N0eWxlPlxuICAgIDwvZGl2PlxuICApO1xufTtcblxuY29uc3QgbWFwU3RhdGVUb1Byb3BzID0gKHN0YXRlKSA9PiAoe1xuICBmYlRva2VuOiBzdGF0ZS51c2VyLmZiVG9rZW4sXG4gIHVzZXI6IHN0YXRlLnVzZXIuY3VycmVudFVzZXIsXG59KTtcblxuY29uc3QgbWFwRGlzcGF0Y2hUb1Byb3BzID0gZGlzcGF0Y2ggPT4gKHtcbiAgICBhdXRoRmI6ICh0b2tlbiwgaWQsIGZiSWQsIG5hbWUpID0+IGRpc3BhdGNoKGF1dGhGYWNlYm9vayh7IHRva2VuLCBpZCwgZmJJZCwgbmFtZX0pKVxuICB9KTtcblxuZXhwb3J0IGRlZmF1bHQgY29ubmVjdChtYXBTdGF0ZVRvUHJvcHMsIG1hcERpc3BhdGNoVG9Qcm9wcykoT25ib2FyZGluZyk7XG4iXX0= */\n/*@ sourceURL=/home/benkissi/projects/getch/getch-frontend-2.0/components/onboarding.js */"));
+};
+
+const mapStateToProps = state => ({
+  fbToken: state.user.fbToken,
+  user: state.user.currentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+  authFb: (token, id, fbId, name) => dispatch(Object(_redux_user_user_actions__WEBPACK_IMPORTED_MODULE_8__["authFacebook"])({
+    token,
+    id,
+    fbId,
+    name
+  }))
+});
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_redux__WEBPACK_IMPORTED_MODULE_7__["connect"])(mapStateToProps, mapDispatchToProps)(Onboarding));
 
 /***/ }),
 
@@ -2718,6 +3014,17 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/react-toastify/scss/main.scss":
+/*!****************************************************!*\
+  !*** ./node_modules/react-toastify/scss/main.scss ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./pages/_app.js":
 /*!***********************!*\
   !*** ./pages/_app.js ***!
@@ -2752,29 +3059,37 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
   debug: true
 })(class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_2___default.a {
   render() {
+    const defaultLayout = props => __jsx("div", {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 12
+      },
+      __self: this
+    }, props.children);
+
     const {
       Component,
       pageProps,
       store
     } = this.props;
-    const Layout = Component.Layout || _components_dashboardLayout__WEBPACK_IMPORTED_MODULE_5__["default"];
+    const Layout = Component.Layout || defaultLayout;
     return __jsx(react_redux__WEBPACK_IMPORTED_MODULE_1__["Provider"], {
       store: store,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 15
-      },
-      __self: this
-    }, __jsx(Layout, {
       __source: {
         fileName: _jsxFileName,
         lineNumber: 16
       },
       __self: this
-    }, __jsx(Component, _extends({}, pageProps, {
+    }, __jsx(Layout, {
       __source: {
         fileName: _jsxFileName,
         lineNumber: 17
+      },
+      __self: this
+    }, __jsx(Component, _extends({}, pageProps, {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 18
       },
       __self: this
     }))));
@@ -3103,14 +3418,16 @@ const makeStore = initialState => {
 /*!************************************!*\
   !*** ./redux/user/user-actions.js ***!
   \************************************/
-/*! exports provided: siginSuccess, siginStart, signupStart, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure */
+/*! exports provided: siginSuccess, signinStart, signupStart, signupSuccess, signupFailure, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure, userLogout, userLogoutSuccess, userLogoutFailure */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "siginSuccess", function() { return siginSuccess; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "siginStart", function() { return siginStart; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signinStart", function() { return signinStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signupStart", function() { return signupStart; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signupSuccess", function() { return signupSuccess; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signupFailure", function() { return signupFailure; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addingCurrentUser", function() { return addingCurrentUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCurrentUser", function() { return setCurrentUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "siginFailure", function() { return siginFailure; });
@@ -3118,18 +3435,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "authFacebook", function() { return authFacebook; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "facebookAuthSuccess", function() { return facebookAuthSuccess; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fbAuthFailure", function() { return fbAuthFailure; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogoutSuccess", function() { return userLogoutSuccess; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogoutFailure", function() { return userLogoutFailure; });
 /* harmony import */ var _user_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./user-types */ "./redux/user/user-types.js");
 
 const siginSuccess = signedIn => ({
   type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_IN_SUCCESS,
   payload: signedIn
 });
-const siginStart = () => ({
-  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_IN_START
+const signinStart = userCredentials => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_IN_START,
+  payload: userCredentials
 });
 const signupStart = userCredentials => ({
   type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_UP_START,
   payload: userCredentials
+});
+const signupSuccess = status => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_UP_SUCCESS,
+  payload: status
+});
+const signupFailure = error => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_UP_FAILURE,
+  payload: error
 });
 const addingCurrentUser = userData => ({
   type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].ADDING_CURRENT_USER,
@@ -3159,6 +3488,17 @@ const fbAuthFailure = error => ({
   type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].AUTH_FB_FAILURE,
   payload: error
 });
+const userLogout = token => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT,
+  payload: token
+});
+const userLogoutSuccess = () => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_SUCCESS
+});
+const userLogoutFailure = error => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_FAILURE,
+  payload: error
+});
 
 /***/ }),
 
@@ -3186,6 +3526,7 @@ const INITIAL_STATE = {
     expires: null
   },
   signedIn: false,
+  logout: false,
   error: null
 };
 
@@ -3212,11 +3553,24 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].AUTH_FB_SUCCESS:
       return _objectSpread({}, state, {
         fbToken: _objectSpread({}, action.payload),
+        currentUser: _objectSpread({}, state.currentUser, {
+          name: action.payload.name
+        }),
+        error: null
+      });
+
+    case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_SUCCESS:
+      return _objectSpread({}, state, {
+        currentUser: null,
+        fbToken: null,
+        logout: true,
         error: null
       });
 
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_IN_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].AUTH_FB_FAILURE:
+    case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_UP_FAILURE:
+    case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_FAILURE:
       return _objectSpread({}, state, {
         error: action.payload
       });
@@ -3234,19 +3588,21 @@ const userReducer = (state = INITIAL_STATE, action) => {
 /*!**********************************!*\
   !*** ./redux/user/user-sagas.js ***!
   \**********************************/
-/*! exports provided: setUser, signIn, signUpUser, facebookAuth, onAddingCurrentUser, onSigninStart, onSignupStart, onAuthFacebook, userSagas */
+/*! exports provided: setUser, signUpUser, signInUser, facebookAuth, logout, onAddingCurrentUser, onSignupStart, onSigninStart, onAuthFacebook, onLogout, userSagas */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return setUser; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signIn", function() { return signIn; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signUpUser", function() { return signUpUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signInUser", function() { return signInUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "facebookAuth", function() { return facebookAuth; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return logout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAddingCurrentUser", function() { return onAddingCurrentUser; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSigninStart", function() { return onSigninStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSignupStart", function() { return onSignupStart; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSigninStart", function() { return onSigninStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAuthFacebook", function() { return onAuthFacebook; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onLogout", function() { return onLogout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userSagas", function() { return userSagas; });
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux-saga/effects */ "redux-saga/effects");
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__);
@@ -3275,12 +3631,46 @@ function* setUser({
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
   }
 }
-function* signIn() {}
 function* signUpUser({
   payload
 }) {
-  // const res = yield signUp(payload.email, payload.password)
-  console.log('the payload', payload);
+  try {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
+    console.log("the payload", payload);
+    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["signUp"])(payload.email, payload.password);
+    const userData = {
+      id: res._id,
+      name: res.name,
+      email: res.email,
+      xToken: res.xToken
+    };
+    console.log("User data", userData);
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["setCurrentUser"])(userData));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["signupSuccess"])(true));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
+  } catch (error) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["signupFailure"])(error));
+  }
+}
+function* signInUser({
+  payload
+}) {
+  try {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
+    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["signIn"])(payload.email, payload.password);
+    const userData = {
+      id: res._id,
+      name: res.name,
+      email: res.email,
+      xToken: res.xToken
+    };
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["setCurrentUser"])(userData));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
+    console.log("signin response", userData);
+  } catch (error) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["siginFailure"])(error));
+  }
 }
 function* facebookAuth({
   payload
@@ -3291,10 +3681,12 @@ function* facebookAuth({
     const {
       token,
       id,
-      fbId
+      fbId,
+      name
     } = payload;
+    console.log('payload', payload);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
-    const fbToken = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["fbAuthentication"])(token, id, fbId);
+    const fbToken = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["fbAuthentication"])(token, id, fbId, name);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["facebookAuthSuccess"])(fbToken));
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
   } catch (error) {
@@ -3302,20 +3694,40 @@ function* facebookAuth({
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
   }
 }
+function* logout({
+  payload
+}) {
+  try {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
+    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["userLogout"])(payload);
+
+    if (res === true) {
+      console.log('logout done');
+      yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["userLogoutSuccess"])());
+      yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
+    }
+  } catch (error) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["userLogoutFailure"])(error));
+  }
+}
 function* onAddingCurrentUser() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].ADDING_CURRENT_USER, setUser);
-}
-function* onSigninStart() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_IN_START, signIn);
 }
 function* onSignupStart() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_UP_START, signUpUser);
 }
+function* onSigninStart() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_IN_START, signInUser);
+}
 function* onAuthFacebook() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].AUTH_FACEBOOK, facebookAuth);
 }
+function* onLogout() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].LOG_OUT, logout);
+}
 function* userSagas() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSigninStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSignupStart)]);
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSigninStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSignupStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onLogout)]);
 }
 
 /***/ }),
@@ -3341,7 +3753,11 @@ const UserActionTypes = {
   LOADING: "LOADING",
   AUTH_FACEBOOK: "AUTH_FACEBOOK",
   SIGN_UP_START: "SIGN_UP_START",
-  SIGN_UP_SUCCESS: "SIGN_UP_SUCCESS"
+  SIGN_UP_SUCCESS: "SIGN_UP_SUCCESS",
+  SIGN_UP_FAILURE: "SIGN_UP_FAILURE",
+  LOG_OUT: "LOG_OUT",
+  LOG_OUT_SUCCESS: "LOG_OUT_SUCCESS",
+  LOG_OUT_FAILURE: "LOG_OUT_FAILURE"
 };
 /* harmony default export */ __webpack_exports__["default"] = (UserActionTypes);
 
@@ -3457,6 +3873,28 @@ module.exports = require("antd/lib/col/style");
 
 /***/ }),
 
+/***/ "antd/lib/modal":
+/*!*********************************!*\
+  !*** external "antd/lib/modal" ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("antd/lib/modal");
+
+/***/ }),
+
+/***/ "antd/lib/modal/style":
+/*!***************************************!*\
+  !*** external "antd/lib/modal/style" ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("antd/lib/modal/style");
+
+/***/ }),
+
 /***/ "antd/lib/row":
 /*!*******************************!*\
   !*** external "antd/lib/row" ***!
@@ -3556,6 +3994,17 @@ module.exports = require("next-redux-wrapper");
 
 /***/ }),
 
+/***/ "next/router":
+/*!******************************!*\
+  !*** external "next/router" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("next/router");
+
+/***/ }),
+
 /***/ "prop-types":
 /*!*****************************!*\
   !*** external "prop-types" ***!
@@ -3608,6 +4057,17 @@ module.exports = require("react-facebook-login/dist/facebook-login-render-props"
 /***/ (function(module, exports) {
 
 module.exports = require("react-redux");
+
+/***/ }),
+
+/***/ "react-toastify":
+/*!*********************************!*\
+  !*** external "react-toastify" ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-toastify");
 
 /***/ }),
 

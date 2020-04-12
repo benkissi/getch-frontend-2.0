@@ -1,8 +1,16 @@
+import Router from 'next/router'
 const Header = props => {
+    const handleSettingsClick = () => {
+        Router.push('/settings')
+    }
+
     return (
         <div id="wrapper">
             <div>
                 Header
+            </div>
+            <div className="count">
+                <p>3 free search: <span>You have 2 left</span></p>
             </div>
             <div id="actions">
                 {
@@ -11,6 +19,7 @@ const Header = props => {
                     <div key={index}>{action}</div>
                     )):''
                 }
+                <div className="profile-wrapper" onClick={handleSettingsClick}><img src="/images/user.svg"/></div>
             </div>
 
         <style jsx>{`
@@ -22,9 +31,37 @@ const Header = props => {
 
             #actions {
                 display: flex;
-                flex: 2;
-                justify-content: flex-end;
+                align-items: center;
+
             }
+
+            #actions > * {
+                margin: 0 5px 0 5px;
+            }
+
+            .count{
+                display: flex;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .count p {
+                margin: 0;
+            }
+
+            .count span {
+                font-weight: bold;
+            }
+            .profile-wrapper {
+                  width: 50px;
+                  height: 30px;
+              }
+
+              .profile-wrapper img {
+                  width: 100%;
+                  height: 100%;
+                  cursor: pointer;
+              }
         `}</style>
         </div>
     )

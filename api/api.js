@@ -3,27 +3,51 @@ import endpoints from './endpoints'
 import {splitArray} from '../utils/search'
 
 export const signUp = async (email, password) =>{
-    const url = endpoint.SIGN_UP
+    console.log('getting', email, password)
+    const url = endpoints.SIGN_UP
     const data = {
         email,
         password
     }
 
     const res = await axios.post(url, data)
-    console.log(res)
+    const token = res.headers['x-auth'].replace('Bearer ', '')
+    res.data['xToken'] = token
+    return res.data
 }
 
-export const fbAuthentication = async (token, id, fbId) => {
+export const signIn = async (email, password) => {
+    console.log('sign in api')
+    const url = endpoints.SIGN_IN
+    const params = {
+        email,
+        password
+    }
+    console.log('api',params)
+
+    const res = await axios.get(url, { 
+        params
+    })
+    const token = res.headers['x-auth'].replace('Bearer ', '')
+    res.data['xToken'] = token
+    return res.data
+}
+
+export const fbAuthentication = async (token, id, fbId, name) => {
+    console.log('name api', name)
     const url = endpoints.FB_AUTH
     const params = {
         token,
         id, 
-        fbId
+        fbId,
+        name
     }
 
     const res = await axios.get(url, {
         params
     })
+
+    console.log('res data', res.data)
 
     return res.data
     
@@ -174,6 +198,25 @@ export const getInterestStats = async (adId, token) => {
 
     return res.data
 }
+
+export const userLogout = async (token) => {
+    console.log('user token', token)
+    const url = endpoints.LOG_OUT
+    console.log('url',url)
+
+    const headers = {
+        'Authorization': token
+    }
+
+    const res = await axios.get(url,{
+        headers
+    })
+
+    console.log('res', res)
+
+    return res.data
+}
+
 
 
 

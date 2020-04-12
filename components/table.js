@@ -14,7 +14,7 @@ const InterestTable = props => {
         rowSelection={rowSelection}
         columns={props.columns} 
         dataSource={props.dataSource} 
-        rowKey={record => record.id}
+        rowKey="id"
         pagination={{
             showSizeChanger:true
         }}/>
