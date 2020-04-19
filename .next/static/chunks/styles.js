@@ -629,10 +629,10 @@
 
 /***/ }),
 
-/***/ "./node_modules/react-toastify/scss/main.scss":
-/*!****************************************************!*\
-  !*** ./node_modules/react-toastify/scss/main.scss ***!
-  \****************************************************/
+/***/ "./node_modules/react-toastify/dist/ReactToastify.min.css":
+/*!****************************************************************!*\
+  !*** ./node_modules/react-toastify/dist/ReactToastify.min.css ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -658,7 +658,7 @@
           .querySelectorAll("link[href][rel=stylesheet]")
           .forEach(function(link) {
             if (!link.href.match(prefix) || link.stale) return;
-            injectCss(link, link.href.split("?")[0] + "?unix=1587305255002");
+            injectCss(link, link.href.split("?")[0] + "?unix=1587308506727");
           });
       }
     }

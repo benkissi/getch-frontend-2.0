@@ -4,7 +4,8 @@ import withRedux from "next-redux-wrapper";
 import makeStore from "../redux/store";
 import { ToastContainer, toast } from "react-toastify";
 
-import "react-toastify/scss/main.scss";
+// import "react-toastify/scss/main.scss";
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export default withRedux(makeStore, { debug: true })(
   class MyApp extends App {
