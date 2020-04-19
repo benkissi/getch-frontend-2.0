@@ -1,0 +1,1 @@
+{"ast":null,"code":"import jwt from \"jsonwebtoken\";\n\nfunction decodeToken(token) {\n  var decoded = jwt.verify(token, process.env.JWT_SECRET);\n  return decoded;\n}\n\nexport default decodeToken;","map":null,"metadata":{},"sourceType":"module"}

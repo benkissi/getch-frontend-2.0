@@ -69,7 +69,7 @@ const DashboardLayout = props => {
           pauseOnHover
         />
          <Row>
-            <Col style={{position: 'relative', height: '100vh'}} span={4}><SideBar/></Col>
+            <Col style={{position: 'relative', height: '100vh', width: "16.66666667%"}} span={4}><SideBar/></Col>
             <Col style={{padding: '0 20px 0 20px', minHeight: '100vh'}} span={20} className="child-container">
             <div className="header">
                 <Header actions={actions} />

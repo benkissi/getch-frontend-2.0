@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var selectInterestTotal = function selectInterestTotal(state) {\n  return state.search.interests.reduce(function (accumulator, item) {\n    return accumulator + 1;\n  }, 0);\n};","map":null,"metadata":{},"sourceType":"module"}

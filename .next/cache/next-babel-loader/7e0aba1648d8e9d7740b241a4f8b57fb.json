@@ -1,0 +1,1 @@
+{"ast":null,"code":"const SearchActionTypes = {\n  START_SEARCH: 'START_SEARCH',\n  SEARCH_SUCCESS: 'SEARCH_SUCCESS',\n  SEARCH_FAILURE: 'SEARCH_FAILURE',\n  IS_LOADING: 'IS_LOADING',\n  SET_COUNT: 'SET_COUNT',\n  SET_INTEREST_COUNT: 'SET_INTEREST_COUNT'\n};\nexport default SearchActionTypes;","map":null,"metadata":{},"sourceType":"module"}

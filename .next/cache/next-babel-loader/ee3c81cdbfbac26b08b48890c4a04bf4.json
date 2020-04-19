@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { all, call } from \"redux-saga/effects\";\nimport { userSagas } from \"./user/user-sagas\";\nimport { searchSagas } from './search/search-sagas';\nexport default function* rootSaga() {\n  yield all([call(userSagas), call(searchSagas)]);\n}","map":null,"metadata":{},"sourceType":"module"}

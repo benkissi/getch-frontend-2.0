@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var truncate = function truncate(string, length) {\n  return string.substring(0, length);\n};","map":null,"metadata":{},"sourceType":"module"}
