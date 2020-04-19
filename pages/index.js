@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Button, Input, Slider } from "antd";
 import { ExportToCsv } from "export-to-csv";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Loader from "react-loader-spinner";
 
 import DashboardLayout from "../components/dashboardLayout";
@@ -15,7 +15,6 @@ import decodeToken from "../utils/auth";
 import { addingCurrentUser } from "../redux/user/user-actions";
 import { searchStart } from "../redux/search/search-actions";
 
-import "react-toastify/scss/main.scss";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 const Index = (props) => {
@@ -187,18 +186,6 @@ const Index = (props) => {
   const { interests, selectedRowKeys, interestNumber, max, min } = state;
   return (
     <div id="wrapper">
-      <ToastContainer
-        position="top-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnVisibilityChange
-        draggable
-        pauseOnHover
-      />
-
       <div id="main-content">
         <div className="top">
           <div className="inner">

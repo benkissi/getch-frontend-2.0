@@ -7,8 +7,7 @@ import { authFacebook } from "../redux/user/user-actions";
 import SideBar from "../components/sideBar";
 import Onboarding from "../components/onboarding"
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/scss/main.scss";
+import { toast } from "react-toastify";
 
 import Header from "./header";
 
@@ -57,17 +56,6 @@ const DashboardLayout = props => {
     ]
  return (
      <div className="layout">
-         <ToastContainer
-          position="top-left"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnVisibilityChange
-          draggable
-          pauseOnHover
-        />
          <Row>
             <Col style={{position: 'relative', height: '100vh', width: "16.66666667%"}} span={4}><SideBar/></Col>
             <Col style={{padding: '0 20px 0 20px', minHeight: '100vh'}} span={20} className="child-container">

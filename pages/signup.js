@@ -2,13 +2,11 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import { Button, Input } from "antd";
 
 import { signupStart, signinStart } from "../redux/user/user-actions";
-
-import "react-toastify/scss/main.scss";
 
 function Signin(props) {
   const [state, setState] = useState({
@@ -174,17 +172,6 @@ function Signin(props) {
   const { current } = state;
   return (
     <div id="wrapper">
-       <ToastContainer
-          position="top-left"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnVisibilityChange
-          draggable
-          pauseOnHover
-        />
       <div className="pane">
         <img src="/images/newLogoWhite.svg" />
         <div className="slogan">Find hidden Facebook interests</div>
