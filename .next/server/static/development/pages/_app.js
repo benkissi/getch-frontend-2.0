@@ -1051,7 +1051,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SET_CURRENT_USER:
       return _objectSpread({}, state, {
         currentUser: action.payload,
-        error: null
+        error: null,
+        signedIn: true,
+        logout: false
       });
 
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_IN_SUCCESS:
@@ -1078,7 +1080,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_SUCCESS:
       return _objectSpread({}, state, {
         currentUser: null,
-        fbToken: null,
+        fbToken: {
+          token: null,
+          expires: null
+        },
+        signedIn: false,
         logout: true,
         error: null
       });
@@ -1088,7 +1094,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_UP_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_FAILURE:
       return _objectSpread({}, state, {
-        error: action.payload
+        error: action.payload,
+        loading: false
       });
 
     default:

@@ -18,6 +18,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         currentUser: action.payload,
         error: null,
+        signedIn: true,
+        logout: false,
       };
     case UserActionTypes.SIGN_IN_SUCCESS:
       return {
@@ -35,14 +37,18 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         fbToken: { ...action.payload },
-        currentUser: {...state.currentUser, name: action.payload.name},
+        currentUser: { ...state.currentUser, name: action.payload.name },
         error: null,
       };
     case UserActionTypes.LOG_OUT_SUCCESS:
       return {
         ...state,
         currentUser: null,
-        fbToken: null,
+        fbToken: {
+          token: null,
+          expires: null,
+        },
+        signedIn: false,
         logout: true,
         error: null,
       };
@@ -53,6 +59,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         error: action.payload,
+        loading: false,
       };
     default:
       return state;

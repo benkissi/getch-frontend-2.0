@@ -222,7 +222,7 @@ const Index = (props) => {
                 <div className="button">
                   <Button onClick={handleExport}>Download as CSV</Button>
                 </div>
-                <div className="divider"></div>
+                {/* <div className="divider"></div>
                 <div className="button">
                   <Button onClick={handleExport}>Save as project</Button>
                 </div>
@@ -230,7 +230,7 @@ const Index = (props) => {
                   <Button color="#4e54c8" onClick={handleExport}>
                     Save to Facebook
                   </Button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -265,7 +265,7 @@ const Index = (props) => {
           flex-grow: 1;
         }
         #table {
-          margin-top: 30px;
+          margin-top: 90px;
           flex-grow: 1;
         }
 
@@ -312,11 +312,11 @@ const Index = (props) => {
 
         .inner {
           position: fixed;
-          top: 50px;
+          top: 70px;
           width: 81%;
           background-color: white;
           z-index: 100;
-          height: 150px;
+          height: 200px;
           display: flex;
           justify-content: center;
           flex-direction: column;

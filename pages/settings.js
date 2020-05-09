@@ -2,16 +2,19 @@ import { connect } from "react-redux";
 import DashboardLayout from "../components/dashboardLayout";
 import { Button } from "antd";
 
-import {userLogout} from "../redux/user/user-actions";
+import { userLogout } from "../redux/user/user-actions";
 
-const Settings = props => {
-    const handleLogout = () => {
-        props.logout(props.user.xToken)
-    }
+const Settings = (props) => {
+  const handleLogout = () => {
+    props.logout(props.user.xToken);
+  };
 
   return (
     <div className="wrapper">
-      <h2>Settings</h2>
+      <div className="title">
+        <h2>Settings</h2>
+      </div>
+
       <div id="logout">
         <p>Logout</p>
         <div id="button">
@@ -30,7 +33,7 @@ const Settings = props => {
         .wrapper {
           display: flex;
           flex-direction: column;
-          margin-top: 50px;
+          margin-top: 100px;
           width: 100%;
           justify-content: center;
         }
@@ -43,6 +46,13 @@ const Settings = props => {
           display: flex;
           width: 100%;
           align-items: center;
+          justify-content: center;
+        }
+        .title {
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: center;
         }
 
         #logout #button {
@@ -53,6 +63,7 @@ const Settings = props => {
           display: flex;
           width: 100%;
           align-items: center;
+          justify-content: center;
         }
 
         #plan #value {
@@ -64,6 +75,7 @@ const Settings = props => {
           margin-bottom: 30px;
           width: 60%;
           border-bottom: solid 1px #eee;
+          align-self: center;
         }
       `}</style>
     </div>
@@ -77,7 +89,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  logout: (token) => dispatch(userLogout(token))
+  logout: (token) => dispatch(userLogout(token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
