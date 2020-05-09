@@ -1,4 +1,6 @@
 import Router from "next/router";
+import { connect } from "react-redux";
+
 const Header = (props) => {
   const handleSettingsClick = () => {
     Router.push("/settings");
@@ -8,16 +10,34 @@ const Header = (props) => {
     Router.push("/");
   };
 
+  const isFreeUser = () => {
+    if (props.user && props.user.plan === "PL001") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div id="wrapper">
       <div className="logo" onClick={goHome}>
         <img src="/images/newLogo.svg" />
       </div>
-      <div className="count">
-        <p>
-          3 free search: <span>You have 2 left</span>
-        </p>
-      </div>
+      {isFreeUser() ? (
+        <div className="count">
+          <p>
+            3 free search:{" "}
+            <span className={`${props.searchCount >= 3 ? "red" : ""}`}>
+              {props.searchCount < 3
+                ? `You have ${3 - props.searchCount} free search left`
+                : "You are out of free searches, kindly upgrade"}
+            </span>
+          </p>
+        </div>
+      ) : (
+        ""
+      )}
+
       <div id="actions">
         {props.actions
           ? props.actions.map((action, index) => (
@@ -39,6 +59,7 @@ const Header = (props) => {
         #actions {
           display: flex;
           align-items: center;
+          margin-left: auto;
         }
 
         #actions > * {
@@ -48,7 +69,6 @@ const Header = (props) => {
         .count {
           display: flex;
           margin-left: auto;
-          margin-right: auto;
         }
 
         .count p {
@@ -77,9 +97,18 @@ const Header = (props) => {
         .logo img {
           width: 100%;
         }
+
+        .red {
+          color: red;
+        }
       `}</style>
     </div>
   );
 };
 
-export default Header;
+const mapStateToProps = (state) => ({
+  user: state.user.currentUser,
+  searchCount: state.search.searchCount,
+});
+
+export default connect(mapStateToProps)(Header);

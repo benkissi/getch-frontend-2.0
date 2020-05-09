@@ -8,9 +8,13 @@ const Plan = (props) => {
         <h3>{props.title}</h3>
         <p>{props.description}</p>
       </div>
+      <div className="price">
+        <span>$</span>
+        59
+      </div>
       <div className="features">
-        {props.features.map((feature) => (
-          <div className="feature">
+        {props.features.map((feature, index) => (
+          <div className="feature" key={index}>
             {" "}
             <div className="feature-image">
               <img src={feature.image} />
@@ -26,7 +30,8 @@ const Plan = (props) => {
           flex-direction: column;
           border: 1px solid #eee;
           padding: 15px;
-          width: 40%;
+          width: 50%;
+          max-width: 407px;
           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
             0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
@@ -45,7 +50,7 @@ const Plan = (props) => {
         }
 
         .features {
-          margin-top: 50px;
+          margin-top: 20px;
           margin-bottom: 50px;
         }
 
@@ -81,6 +86,18 @@ const Plan = (props) => {
           border: none;
           border-radius: 4px;
           color: white;
+        }
+
+        .price {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #4e53c8;
+          font-weight: bold;
+          font-size: 50px;
+        }
+        .price span {
+          font-size: 30px;
         }
       `}</style>
     </div>

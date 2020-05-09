@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Router from "next/router";
 import { connect } from "react-redux";
 import { Button, Input, Slider } from "antd";
 import { ExportToCsv } from "export-to-csv";
@@ -33,6 +34,7 @@ const Index = (props) => {
     keyword,
     interestCount,
     searching,
+    searchCount,
   } = props;
   const { Search } = Input;
   const router = useRouter();
@@ -78,7 +80,11 @@ const Index = (props) => {
   }, [interestData, interestCount]);
 
   const getInterest = async (value) => {
-    await searchInterest(fbToken.token, value, 500);
+    if (searchCount >= 3 && user.plan === "PL001") {
+      Router.push("/plans");
+      return;
+    }
+    await searchInterest(fbToken.token, value, 500, user.xToken);
   };
 
   const onSelectionChange = (selectedRowKeys, selectedRows) => {
@@ -340,6 +346,7 @@ Index.getInitialProps = async function (context) {
 const mapStateToProps = (state) => ({
   user: state.user.currentUser,
   searching: state.search.loading,
+  searchCount: state.search.searchCount,
   fbToken: state.user.fbToken,
   interestData: state.search.interests,
   interestCount: state.search.interestCount,
@@ -348,8 +355,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   addUser: (item) => dispatch(addingCurrentUser(item)),
-  searchInterest: (token, value, limit) =>
-    dispatch(searchStart({ token, value, limit })),
+  searchInterest: (token, value, limit, xToken) =>
+    dispatch(searchStart({ token, value, limit, xToken })),
 });
 
 Index.Layout = DashboardLayout;

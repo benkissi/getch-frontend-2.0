@@ -10,8 +10,9 @@ import {
   facebookAuthSuccess,
   fbAuthFailure,
   userLogoutSuccess,
-  userLogoutFailure
+  userLogoutFailure,
 } from "./user-actions";
+import { setCount } from "../search/search-actions";
 import { fbAuthentication, signUp, signIn, userLogout } from "../../api/api";
 
 export function* setUser({ payload }) {
@@ -41,9 +42,11 @@ export function* signUpUser({ payload }) {
       name: res.name,
       email: res.email,
       xToken: res.xToken,
+      plan: res.plan,
     };
     console.log("User data", userData);
     yield put(setCurrentUser(userData));
+    yield put(setCount(res.searchCount));
     yield put(signupSuccess(true));
     yield put(isLoading(false));
   } catch (error) {
@@ -60,8 +63,11 @@ export function* signInUser({ payload }) {
       name: res.name,
       email: res.email,
       xToken: res.xToken,
+      plan: res.plan,
     };
     yield put(setCurrentUser(userData));
+    yield put(setCount(res.searchCount));
+    console.log("search count", res.searchCount);
     yield put(isLoading(false));
     console.log("signin response", userData);
   } catch (error) {
@@ -74,7 +80,7 @@ export function* facebookAuth({ payload }) {
   yield put(isLoading(true));
   try {
     const { token, id, fbId, name } = payload;
-    console.log('payload', payload)
+    console.log("payload", payload);
     yield put(isLoading(true));
     const fbToken = yield fbAuthentication(token, id, fbId, name);
 
@@ -86,18 +92,18 @@ export function* facebookAuth({ payload }) {
   }
 }
 
-export function* logout({payload}){
+export function* logout({ payload }) {
   try {
     yield put(isLoading(true));
-    const res = yield userLogout(payload)
-    if(res === true) {
-      console.log('logout done')
-      yield put(userLogoutSuccess())
+    const res = yield userLogout(payload);
+    if (res === true) {
+      console.log("logout done");
+      yield put(userLogoutSuccess());
       yield put(isLoading(false));
     }
   } catch (error) {
     yield put(isLoading(false));
-    yield put(userLogoutFailure(error))
+    yield put(userLogoutFailure(error));
   }
 }
 
@@ -118,7 +124,7 @@ export function* onAuthFacebook() {
 }
 
 export function* onLogout() {
-  yield takeLatest(UserActionTypes.LOG_OUT, logout)
+  yield takeLatest(UserActionTypes.LOG_OUT, logout);
 }
 
 export function* userSagas() {
@@ -127,6 +133,6 @@ export function* userSagas() {
     call(onAddingCurrentUser),
     call(onSigninStart),
     call(onSignupStart),
-    call(onLogout)
+    call(onLogout),
   ]);
 }

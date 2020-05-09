@@ -51,6 +51,7 @@ const DashboardLayout = (props) => {
 
   const actions = [
     <Button
+      hidden={props.user && !props.user.plan == "PL001"}
       style={{ background: "#f86326", border: "none", color: "white" }}
       onClick={goToPlans}
     >

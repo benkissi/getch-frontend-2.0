@@ -4,7 +4,7 @@
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout */
+/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout, updateSearchCount */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23,6 +23,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAds", function() { return getAds; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestStats", function() { return getInterestStats; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSearchCount", function() { return updateSearchCount; });
 /* harmony import */ var _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
@@ -41,7 +42,7 @@ var signUp = function signUp(email, password) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          console.log('getting', email, password);
+          console.log("getting", email, password);
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].SIGN_UP;
           data = {
             email: email,
@@ -52,8 +53,8 @@ var signUp = function signUp(email, password) {
 
         case 5:
           res = _context.sent;
-          token = res.headers['x-auth'].replace('Bearer ', '');
-          res.data['xToken'] = token;
+          token = res.headers["x-auth"].replace("Bearer ", "");
+          res.data["xToken"] = token;
           return _context.abrupt("return", res.data);
 
         case 9:
@@ -69,13 +70,13 @@ var signIn = function signIn(email, password) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          console.log('sign in api');
+          console.log("sign in api");
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].SIGN_IN;
           params = {
             email: email,
             password: password
           };
-          console.log('api', params);
+          console.log("api", params);
           _context2.next = 6;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
             params: params
@@ -83,8 +84,8 @@ var signIn = function signIn(email, password) {
 
         case 6:
           res = _context2.sent;
-          token = res.headers['x-auth'].replace('Bearer ', '');
-          res.data['xToken'] = token;
+          token = res.headers["x-auth"].replace("Bearer ", "");
+          res.data["xToken"] = token;
           return _context2.abrupt("return", res.data);
 
         case 10:
@@ -100,7 +101,7 @@ var fbAuthentication = function fbAuthentication(token, id, fbId, name) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          console.log('name api', name);
+          console.log("name api", name);
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].FB_AUTH;
           params = {
             token: token,
@@ -115,7 +116,7 @@ var fbAuthentication = function fbAuthentication(token, id, fbId, name) {
 
         case 5:
           res = _context3.sent;
-          console.log('res data', res.data);
+          console.log("res data", res.data);
           return _context3.abrupt("return", res.data);
 
         case 8:
@@ -139,7 +140,7 @@ var searchInterest = function searchInterest(token, keyword) {
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].FB_INTEREST_SEARCH(2.11);
           params = {
             q: keyword,
-            type: 'adinterest',
+            type: "adinterest",
             access_token: token,
             limit: limit
           };
@@ -176,7 +177,7 @@ var getInterestSuggestions = function getInterestSuggestions(token, keywords) {
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].FB_INTEREST_SEARCH(2.11);
           params = {
             interest_list: keywords,
-            type: 'adinterestsuggestion',
+            type: "adinterestsuggestion",
             access_token: token,
             limit: limit
           };
@@ -319,7 +320,7 @@ var getAdAccounts = function getAdAccounts(fbId, token) {
         case 0:
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].GET_ADACCOUNTS(fbId);
           headers = {
-            'Authorization': token
+            Authorization: token
           };
           params = {
             fbId: fbId
@@ -369,7 +370,7 @@ var getCampaigns = function getCampaigns(accountId, token) {
         case 0:
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].GET_CAMPAIGNS(accountId);
           headers = {
-            'Authorization': token
+            Authorization: token
           };
           _context10.next = 4;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
@@ -395,7 +396,7 @@ var getAdsets = function getAdsets(camaignId, token) {
         case 0:
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].GET_ADSETS(camaignId);
           headers = {
-            'Authorization': token
+            Authorization: token
           };
           _context11.next = 4;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
@@ -421,7 +422,7 @@ var getAds = function getAds(adsetId, token) {
         case 0:
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].GET_ADS(adsetId);
           headers = {
-            'Authorization': token
+            Authorization: token
           };
           _context12.next = 4;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
@@ -447,7 +448,7 @@ var getInterestStats = function getInterestStats(adId, token) {
         case 0:
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].GET_STATS(adId);
           headers = {
-            'Authorization': token
+            Authorization: token
           };
           _context13.next = 4;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
@@ -471,11 +472,11 @@ var userLogout = function userLogout(token) {
     while (1) {
       switch (_context14.prev = _context14.next) {
         case 0:
-          console.log('user token', token);
+          console.log("user token", token);
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].LOG_OUT;
-          console.log('url', url);
+          console.log("url", url);
           headers = {
-            'Authorization': token
+            Authorization: token
           };
           _context14.next = 6;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
@@ -484,12 +485,39 @@ var userLogout = function userLogout(token) {
 
         case 6:
           res = _context14.sent;
-          console.log('res', res);
+          console.log("res", res);
           return _context14.abrupt("return", res.data);
 
         case 9:
         case "end":
           return _context14.stop();
+      }
+    }
+  }, null, null, null, Promise);
+};
+var updateSearchCount = function updateSearchCount(token) {
+  var url, headers, res;
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.async(function updateSearchCount$(_context15) {
+    while (1) {
+      switch (_context15.prev = _context15.next) {
+        case 0:
+          url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].UPDATE_SEARCH_COUNT;
+          headers = {
+            Authorization: token
+          };
+          _context15.next = 4;
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
+            headers: headers
+          }));
+
+        case 4:
+          res = _context15.sent;
+          console.log("count", res);
+          return _context15.abrupt("return", res.data);
+
+        case 7:
+        case "end":
+          return _context15.stop();
       }
     }
   }, null, null, null, Promise);
@@ -531,7 +559,8 @@ var endpoints = {
   },
   SIGN_UP: "".concat("http://localhost:9090/", "users/signup"),
   SIGN_IN: "".concat("http://localhost:9090/", "users/signin"),
-  LOG_OUT: "".concat("http://localhost:9090/", "users/logout")
+  LOG_OUT: "".concat("http://localhost:9090/", "users/logout"),
+  UPDATE_SEARCH_COUNT: "".concat("http://localhost:9090/", "facebook/count")
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -17395,7 +17424,7 @@ function rootSaga() {
 /*!****************************************!*\
   !*** ./redux/search/search-actions.js ***!
   \****************************************/
-/*! exports provided: searchStart, searchSuccess, searchFailure, setInterestCount, isLoading */
+/*! exports provided: searchStart, searchSuccess, searchFailure, setInterestCount, isLoading, setCount */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17405,6 +17434,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchFailure", function() { return searchFailure; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setInterestCount", function() { return setInterestCount; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isLoading", function() { return isLoading; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCount", function() { return setCount; });
 /* harmony import */ var _search_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./search-types */ "./redux/search/search-types.js");
 
 var searchStart = function searchStart(searchParams) {
@@ -17437,6 +17467,12 @@ var isLoading = function isLoading(status) {
     payload: status
   };
 };
+var setCount = function setCount(count) {
+  return {
+    type: _search_types__WEBPACK_IMPORTED_MODULE_0__["default"].SET_COUNT,
+    payload: count
+  };
+};
 
 /***/ }),
 
@@ -17461,7 +17497,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 var INITIAL_STATE = {
   keyword: null,
   interests: null,
-  searchCount: null,
+  searchCount: 0,
   error: null,
   loading: false,
   interestCount: null
@@ -17476,6 +17512,7 @@ var searchReducer = function searchReducer() {
       return _objectSpread({}, state, {
         interests: action.payload.data,
         keyword: action.payload.keyword,
+        searchCount: action.payload.count,
         error: null
       });
 
@@ -17543,14 +17580,14 @@ var _marked = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0
 
 
 function getInterest(_ref) {
-  var payload, token, value, limit, data, levelOne, names, suggestions, levelTwo, allInterest, rankedList, total;
+  var payload, token, value, limit, xToken, data, levelOne, names, suggestions, levelTwo, allInterest, rankedList, count, total;
   return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function getInterest$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           payload = _ref.payload;
           _context.prev = 1;
-          token = payload.token, value = payload.value, limit = payload.limit;
+          token = payload.token, value = payload.value, limit = payload.limit, xToken = payload.xToken;
           _context.next = 5;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(true));
 
@@ -17573,50 +17610,57 @@ function getInterest(_ref) {
             var exist = Object(_utils_search__WEBPACK_IMPORTED_MODULE_5__["containsKeyword"])(value, interest.name);
 
             if (exist !== -1) {
-              interest['relevance'] = interest.relevance + 3;
+              interest["relevance"] = interest.relevance + 3;
             }
 
             return interest;
           });
           _context.next = 18;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["searchSuccess"])({
-            data: rankedList,
-            keyword: value
-          }));
+          return Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["updateSearchCount"])(xToken);
 
         case 18:
-          _context.next = 20;
+          count = _context.sent;
+          console.log("count saga", count);
+          _context.next = 22;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["searchSuccess"])({
+            data: rankedList,
+            keyword: value,
+            count: count
+          }));
+
+        case 22:
+          _context.next = 24;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["select"])(_search_selectors__WEBPACK_IMPORTED_MODULE_7__["selectInterestTotal"]);
 
-        case 20:
+        case 24:
           total = _context.sent;
-          _context.next = 23;
+          _context.next = 27;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["setInterestCount"])(total));
 
-        case 23:
-          _context.next = 25;
+        case 27:
+          _context.next = 29;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
-        case 25:
-          _context.next = 33;
+        case 29:
+          _context.next = 37;
           break;
 
-        case 27:
-          _context.prev = 27;
+        case 31:
+          _context.prev = 31;
           _context.t0 = _context["catch"](1);
-          _context.next = 31;
+          _context.next = 35;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
-        case 31:
-          _context.next = 33;
+        case 35:
+          _context.next = 37;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["searchFailure"])(_context.t0));
 
-        case 33:
+        case 37:
         case "end":
           return _context.stop();
       }
     }
-  }, _marked, null, [[1, 27]]);
+  }, _marked, null, [[1, 31]]);
 }
 
 function onSearchStart() {
@@ -17967,7 +18011,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux-saga/effects */ "./node_modules/redux-saga/dist/redux-saga-effects-npm-proxy.esm.js");
 /* harmony import */ var _user_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./user-types */ "./redux/user/user-types.js");
 /* harmony import */ var _user_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./user-actions */ "./redux/user/user-actions.js");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../api/api */ "./api/api.js");
+/* harmony import */ var _search_search_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../search/search-actions */ "./redux/search/search-actions.js");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../api/api */ "./api/api.js");
 
 
 var _marked = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(setUser),
@@ -17981,6 +18026,7 @@ var _marked = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0
     _marked9 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onAuthFacebook),
     _marked10 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onLogout),
     _marked11 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(userSagas);
+
 
 
 
@@ -18052,7 +18098,7 @@ function signUpUser(_ref2) {
         case 4:
           console.log("the payload", payload);
           _context2.next = 7;
-          return Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["signUp"])(payload.email, payload.password);
+          return Object(_api_api__WEBPACK_IMPORTED_MODULE_5__["signUp"])(payload.email, payload.password);
 
         case 7:
           res = _context2.sent;
@@ -18060,7 +18106,8 @@ function signUpUser(_ref2) {
             id: res._id,
             name: res.name,
             email: res.email,
-            xToken: res.xToken
+            xToken: res.xToken,
+            plan: res.plan
           };
           console.log("User data", userData);
           _context2.next = 12;
@@ -18068,28 +18115,32 @@ function signUpUser(_ref2) {
 
         case 12:
           _context2.next = 14;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["signupSuccess"])(true));
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_search_search_actions__WEBPACK_IMPORTED_MODULE_4__["setCount"])(res.searchCount));
 
         case 14:
           _context2.next = 16;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["signupSuccess"])(true));
 
         case 16:
-          _context2.next = 22;
-          break;
+          _context2.next = 18;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
         case 18:
-          _context2.prev = 18;
+          _context2.next = 24;
+          break;
+
+        case 20:
+          _context2.prev = 20;
           _context2.t0 = _context2["catch"](1);
-          _context2.next = 22;
+          _context2.next = 24;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["signupFailure"])(_context2.t0));
 
-        case 22:
+        case 24:
         case "end":
           return _context2.stop();
       }
     }
-  }, _marked2, null, [[1, 18]]);
+  }, _marked2, null, [[1, 20]]);
 }
 function signInUser(_ref3) {
   var payload, res, userData;
@@ -18104,7 +18155,7 @@ function signInUser(_ref3) {
 
         case 4:
           _context3.next = 6;
-          return Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["signIn"])(payload.email, payload.password);
+          return Object(_api_api__WEBPACK_IMPORTED_MODULE_5__["signIn"])(payload.email, payload.password);
 
         case 6:
           res = _context3.sent;
@@ -18112,36 +18163,42 @@ function signInUser(_ref3) {
             id: res._id,
             name: res.name,
             email: res.email,
-            xToken: res.xToken
+            xToken: res.xToken,
+            plan: res.plan
           };
           _context3.next = 10;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["setCurrentUser"])(userData));
 
         case 10:
           _context3.next = 12;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_search_search_actions__WEBPACK_IMPORTED_MODULE_4__["setCount"])(res.searchCount));
 
         case 12:
-          console.log("signin response", userData);
-          _context3.next = 21;
-          break;
-
-        case 15:
-          _context3.prev = 15;
-          _context3.t0 = _context3["catch"](1);
-          _context3.next = 19;
+          console.log("search count", res.searchCount);
+          _context3.next = 15;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
-        case 19:
-          _context3.next = 21;
+        case 15:
+          console.log("signin response", userData);
+          _context3.next = 24;
+          break;
+
+        case 18:
+          _context3.prev = 18;
+          _context3.t0 = _context3["catch"](1);
+          _context3.next = 22;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
+
+        case 22:
+          _context3.next = 24;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["siginFailure"])(_context3.t0));
 
-        case 21:
+        case 24:
         case "end":
           return _context3.stop();
       }
     }
-  }, _marked3, null, [[1, 15]]);
+  }, _marked3, null, [[1, 18]]);
 }
 function facebookAuth(_ref4) {
   var payload, token, id, fbId, name, fbToken;
@@ -18156,13 +18213,13 @@ function facebookAuth(_ref4) {
         case 3:
           _context4.prev = 3;
           token = payload.token, id = payload.id, fbId = payload.fbId, name = payload.name;
-          console.log('payload', payload);
+          console.log("payload", payload);
           _context4.next = 8;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(true));
 
         case 8:
           _context4.next = 10;
-          return Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["fbAuthentication"])(token, id, fbId, name);
+          return Object(_api_api__WEBPACK_IMPORTED_MODULE_5__["fbAuthentication"])(token, id, fbId, name);
 
         case 10:
           fbToken = _context4.sent;
@@ -18207,7 +18264,7 @@ function logout(_ref5) {
 
         case 4:
           _context5.next = 6;
-          return Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["userLogout"])(payload);
+          return Object(_api_api__WEBPACK_IMPORTED_MODULE_5__["userLogout"])(payload);
 
         case 6:
           res = _context5.sent;
@@ -18217,7 +18274,7 @@ function logout(_ref5) {
             break;
           }
 
-          console.log('logout done');
+          console.log("logout done");
           _context5.next = 11;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["userLogoutSuccess"])());
 

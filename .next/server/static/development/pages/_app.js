@@ -108,7 +108,7 @@ module.exports = require("next/dist/next-server/lib/utils.js");
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout */
+/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout, updateSearchCount */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -127,6 +127,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAds", function() { return getAds; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestStats", function() { return getInterestStats; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSearchCount", function() { return updateSearchCount; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _endpoints__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./endpoints */ "./api/endpoints.js");
@@ -135,34 +136,34 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const signUp = async (email, password) => {
-  console.log('getting', email, password);
+  console.log("getting", email, password);
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_UP;
   const data = {
     email,
     password
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(url, data);
-  const token = res.headers['x-auth'].replace('Bearer ', '');
-  res.data['xToken'] = token;
+  const token = res.headers["x-auth"].replace("Bearer ", "");
+  res.data["xToken"] = token;
   return res.data;
 };
 const signIn = async (email, password) => {
-  console.log('sign in api');
+  console.log("sign in api");
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_IN;
   const params = {
     email,
     password
   };
-  console.log('api', params);
+  console.log("api", params);
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     params
   });
-  const token = res.headers['x-auth'].replace('Bearer ', '');
-  res.data['xToken'] = token;
+  const token = res.headers["x-auth"].replace("Bearer ", "");
+  res.data["xToken"] = token;
   return res.data;
 };
 const fbAuthentication = async (token, id, fbId, name) => {
-  console.log('name api', name);
+  console.log("name api", name);
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].FB_AUTH;
   const params = {
     token,
@@ -173,14 +174,14 @@ const fbAuthentication = async (token, id, fbId, name) => {
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     params
   });
-  console.log('res data', res.data);
+  console.log("res data", res.data);
   return res.data;
 };
 const searchInterest = async (token, keyword, limit = 500) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].FB_INTEREST_SEARCH(2.11);
   const params = {
     q: keyword,
-    type: 'adinterest',
+    type: "adinterest",
     access_token: token,
     limit
   };
@@ -195,7 +196,7 @@ const getInterestSuggestions = async (token, keywords, limit = 100) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].FB_INTEREST_SEARCH(2.11);
   const params = {
     interest_list: keywords,
-    type: 'adinterestsuggestion',
+    type: "adinterestsuggestion",
     access_token: token,
     limit: limit
   };
@@ -244,7 +245,7 @@ const getProducts = async shopName => {
 const getAdAccounts = async (fbId, token) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_ADACCOUNTS(fbId);
   const headers = {
-    'Authorization': token
+    Authorization: token
   };
   const params = {
     fbId
@@ -262,7 +263,7 @@ const fbPaginate = async page => {
 const getCampaigns = async (accountId, token) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_CAMPAIGNS(accountId);
   const headers = {
-    'Authorization': token
+    Authorization: token
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     headers
@@ -272,7 +273,7 @@ const getCampaigns = async (accountId, token) => {
 const getAdsets = async (camaignId, token) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_ADSETS(camaignId);
   const headers = {
-    'Authorization': token
+    Authorization: token
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     headers
@@ -282,7 +283,7 @@ const getAdsets = async (camaignId, token) => {
 const getAds = async (adsetId, token) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_ADS(adsetId);
   const headers = {
-    'Authorization': token
+    Authorization: token
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     headers
@@ -292,7 +293,7 @@ const getAds = async (adsetId, token) => {
 const getInterestStats = async (adId, token) => {
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].GET_STATS(adId);
   const headers = {
-    'Authorization': token
+    Authorization: token
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     headers
@@ -300,16 +301,27 @@ const getInterestStats = async (adId, token) => {
   return res.data;
 };
 const userLogout = async token => {
-  console.log('user token', token);
+  console.log("user token", token);
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].LOG_OUT;
-  console.log('url', url);
+  console.log("url", url);
   const headers = {
-    'Authorization': token
+    Authorization: token
   };
   const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
     headers
   });
-  console.log('res', res);
+  console.log("res", res);
+  return res.data;
+};
+const updateSearchCount = async token => {
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].UPDATE_SEARCH_COUNT;
+  const headers = {
+    Authorization: token
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url, {
+    headers
+  });
+  console.log("count", res);
   return res.data;
 };
 
@@ -335,7 +347,8 @@ const endpoints = {
   GET_STATS: adId => `${"http://localhost:9090/"}facebook/stats/${adId}`,
   SIGN_UP: `${"http://localhost:9090/"}users/signup`,
   SIGN_IN: `${"http://localhost:9090/"}users/signin`,
-  LOG_OUT: `${"http://localhost:9090/"}users/logout`
+  LOG_OUT: `${"http://localhost:9090/"}users/logout`,
+  UPDATE_SEARCH_COUNT: `${"http://localhost:9090/"}facebook/count`
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -677,7 +690,7 @@ function* rootSaga() {
 /*!****************************************!*\
   !*** ./redux/search/search-actions.js ***!
   \****************************************/
-/*! exports provided: searchStart, searchSuccess, searchFailure, setInterestCount, isLoading */
+/*! exports provided: searchStart, searchSuccess, searchFailure, setInterestCount, isLoading, setCount */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -687,6 +700,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "searchFailure", function() { return searchFailure; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setInterestCount", function() { return setInterestCount; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isLoading", function() { return isLoading; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCount", function() { return setCount; });
 /* harmony import */ var _search_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./search-types */ "./redux/search/search-types.js");
 
 const searchStart = searchParams => ({
@@ -708,6 +722,10 @@ const setInterestCount = count => ({
 const isLoading = status => ({
   type: _search_types__WEBPACK_IMPORTED_MODULE_0__["default"].IS_LOADING,
   payload: status
+});
+const setCount = count => ({
+  type: _search_types__WEBPACK_IMPORTED_MODULE_0__["default"].SET_COUNT,
+  payload: count
 });
 
 /***/ }),
@@ -732,7 +750,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 const INITIAL_STATE = {
   keyword: null,
   interests: null,
-  searchCount: null,
+  searchCount: 0,
   error: null,
   loading: false,
   interestCount: null
@@ -744,6 +762,7 @@ const searchReducer = (state = INITIAL_STATE, action) => {
       return _objectSpread({}, state, {
         interests: action.payload.data,
         keyword: action.payload.keyword,
+        searchCount: action.payload.count,
         error: null
       });
 
@@ -808,7 +827,8 @@ function* getInterest({
     const {
       token,
       value,
-      limit
+      limit,
+      xToken
     } = payload;
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_1__["isLoading"])(true));
     const data = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_2__["searchInterest"])(token, value, limit);
@@ -821,14 +841,17 @@ function* getInterest({
       const exist = Object(_utils_search__WEBPACK_IMPORTED_MODULE_3__["containsKeyword"])(value, interest.name);
 
       if (exist !== -1) {
-        interest['relevance'] = interest.relevance + 3;
+        interest["relevance"] = interest.relevance + 3;
       }
 
       return interest;
     });
+    const count = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_2__["updateSearchCount"])(xToken);
+    console.log("count saga", count);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_1__["searchSuccess"])({
       data: rankedList,
-      keyword: value
+      keyword: value,
+      count
     }));
     const total = yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["select"])(_search_selectors__WEBPACK_IMPORTED_MODULE_5__["selectInterestTotal"]);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_1__["setInterestCount"])(total));
@@ -1131,7 +1154,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _user_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./user-types */ "./redux/user/user-types.js");
 /* harmony import */ var _user_actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./user-actions */ "./redux/user/user-actions.js");
-/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/api */ "./api/api.js");
+/* harmony import */ var _search_search_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../search/search-actions */ "./redux/search/search-actions.js");
+/* harmony import */ var _api_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../api/api */ "./api/api.js");
+
 
 
 
@@ -1160,15 +1185,17 @@ function* signUpUser({
   try {
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
     console.log("the payload", payload);
-    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["signUp"])(payload.email, payload.password);
+    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["signUp"])(payload.email, payload.password);
     const userData = {
       id: res._id,
       name: res.name,
       email: res.email,
-      xToken: res.xToken
+      xToken: res.xToken,
+      plan: res.plan
     };
     console.log("User data", userData);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["setCurrentUser"])(userData));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_search_actions__WEBPACK_IMPORTED_MODULE_3__["setCount"])(res.searchCount));
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["signupSuccess"])(true));
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
   } catch (error) {
@@ -1180,14 +1207,17 @@ function* signInUser({
 }) {
   try {
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
-    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["signIn"])(payload.email, payload.password);
+    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["signIn"])(payload.email, payload.password);
     const userData = {
       id: res._id,
       name: res.name,
       email: res.email,
-      xToken: res.xToken
+      xToken: res.xToken,
+      plan: res.plan
     };
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["setCurrentUser"])(userData));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_search_actions__WEBPACK_IMPORTED_MODULE_3__["setCount"])(res.searchCount));
+    console.log("search count", res.searchCount);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
     console.log("signin response", userData);
   } catch (error) {
@@ -1207,9 +1237,9 @@ function* facebookAuth({
       fbId,
       name
     } = payload;
-    console.log('payload', payload);
+    console.log("payload", payload);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
-    const fbToken = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["fbAuthentication"])(token, id, fbId, name);
+    const fbToken = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["fbAuthentication"])(token, id, fbId, name);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["facebookAuthSuccess"])(fbToken));
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
   } catch (error) {
@@ -1222,10 +1252,10 @@ function* logout({
 }) {
   try {
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
-    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_3__["userLogout"])(payload);
+    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["userLogout"])(payload);
 
     if (res === true) {
-      console.log('logout done');
+      console.log("logout done");
       yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["userLogoutSuccess"])());
       yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
     }

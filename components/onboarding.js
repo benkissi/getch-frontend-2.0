@@ -34,7 +34,7 @@ const Onboarding = (props) => {
           <p>Connect to Facebook to begin searching for interest</p>
           <FacebookLogin
             appId={process.env.FB_APP_ID}
-            autoLoad={true}
+            autoLoad={false}
             fields="name,email,id"
             onClick={faceAuthStart}
             scope="ads_management, email"
