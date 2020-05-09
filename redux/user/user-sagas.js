@@ -69,7 +69,6 @@ export function* signInUser({ payload }) {
     yield put(setCount(res.searchCount));
     console.log("search count", res.searchCount);
     yield put(isLoading(false));
-    console.log("signin response", userData);
   } catch (error) {
     yield put(isLoading(false));
     yield put(siginFailure(error));

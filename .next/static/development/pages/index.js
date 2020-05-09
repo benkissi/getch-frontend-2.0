@@ -20968,7 +20968,7 @@ function fromByteArray (uint8) {
 
   var Buffer;
   try {
-    Buffer = __webpack_require__(/*! buffer */ 23).Buffer;
+    Buffer = __webpack_require__(/*! buffer */ 22).Buffer;
   } catch (e) {
   }
 
@@ -24410,7 +24410,7 @@ if (typeof self === 'object') {
 } else {
   // Node.js or Web worker with no crypto support
   try {
-    var crypto = __webpack_require__(/*! crypto */ 24);
+    var crypto = __webpack_require__(/*! crypto */ 23);
     if (typeof crypto.randomBytes !== 'function')
       throw new Error('Not supported');
 
@@ -87108,7 +87108,7 @@ util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inh
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(/*! util */ 21);
+var debugUtil = __webpack_require__(/*! util */ 20);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -88997,7 +88997,7 @@ Writable.prototype._destroy = function (err, cb) {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/readable-stream/node_modules/safe-buffer/index.js").Buffer;
-var util = __webpack_require__(/*! util */ 22);
+var util = __webpack_require__(/*! util */ 21);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -98185,6 +98185,17 @@ var chartData = [{
 
 /***/ }),
 
+/***/ 20:
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+
 /***/ 21:
 /*!**********************!*\
   !*** util (ignored) ***!
@@ -98197,17 +98208,6 @@ var chartData = [{
 /***/ }),
 
 /***/ 22:
-/*!**********************!*\
-  !*** util (ignored) ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
-/***/ }),
-
-/***/ 23:
 /*!************************!*\
   !*** buffer (ignored) ***!
   \************************/
@@ -98218,7 +98218,7 @@ var chartData = [{
 
 /***/ }),
 
-/***/ 24:
+/***/ 23:
 /*!************************!*\
   !*** crypto (ignored) ***!
   \************************/
@@ -98229,7 +98229,7 @@ var chartData = [{
 
 /***/ }),
 
-/***/ 7:
+/***/ 3:
 /*!**********************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2F&absolutePagePath=%2Fhome%2Fbenkissi%2Fprojects%2Fgetch%2Fgetch-frontend-2.0%2Fpages%2Findex.js ***!
   \**********************************************************************************************************************************************/
@@ -98252,5 +98252,5 @@ module.exports = dll_c2e10d183b950a67d9e7;
 
 /***/ })
 
-},[[7,"static/runtime/webpack.js","styles"]]]);
+},[[3,"static/runtime/webpack.js","styles"]]]);
 //# sourceMappingURL=index.js.map

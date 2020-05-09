@@ -17580,7 +17580,8 @@ var _marked = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0
 
 
 function getInterest(_ref) {
-  var payload, token, value, limit, xToken, data, levelOne, names, suggestions, levelTwo, allInterest, rankedList, count, total;
+  var payload, token, value, limit, xToken, data, levelOne, names, suggestions, levelTwo, allInterest, rankedList, _yield$updateSearchCo, count, total;
+
   return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function getInterest$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -17619,48 +17620,49 @@ function getInterest(_ref) {
           return Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["updateSearchCount"])(xToken);
 
         case 18:
-          count = _context.sent;
+          _yield$updateSearchCo = _context.sent;
+          count = _yield$updateSearchCo.count;
           console.log("count saga", count);
-          _context.next = 22;
+          _context.next = 23;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["searchSuccess"])({
             data: rankedList,
             keyword: value,
             count: count
           }));
 
-        case 22:
-          _context.next = 24;
+        case 23:
+          _context.next = 25;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["select"])(_search_selectors__WEBPACK_IMPORTED_MODULE_7__["selectInterestTotal"]);
 
-        case 24:
+        case 25:
           total = _context.sent;
-          _context.next = 27;
+          _context.next = 28;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["setInterestCount"])(total));
 
-        case 27:
-          _context.next = 29;
+        case 28:
+          _context.next = 30;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
-        case 29:
-          _context.next = 37;
+        case 30:
+          _context.next = 38;
           break;
 
-        case 31:
-          _context.prev = 31;
+        case 32:
+          _context.prev = 32;
           _context.t0 = _context["catch"](1);
-          _context.next = 35;
+          _context.next = 36;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
-        case 35:
-          _context.next = 37;
+        case 36:
+          _context.next = 38;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_2__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_3__["searchFailure"])(_context.t0));
 
-        case 37:
+        case 38:
         case "end":
           return _context.stop();
       }
     }
-  }, _marked, null, [[1, 31]]);
+  }, _marked, null, [[1, 32]]);
 }
 
 function onSearchStart() {
@@ -18179,26 +18181,25 @@ function signInUser(_ref3) {
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
         case 15:
-          console.log("signin response", userData);
-          _context3.next = 24;
+          _context3.next = 23;
           break;
 
-        case 18:
-          _context3.prev = 18;
+        case 17:
+          _context3.prev = 17;
           _context3.t0 = _context3["catch"](1);
-          _context3.next = 22;
+          _context3.next = 21;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
-        case 22:
-          _context3.next = 24;
+        case 21:
+          _context3.next = 23;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["siginFailure"])(_context3.t0));
 
-        case 24:
+        case 23:
         case "end":
           return _context3.stop();
       }
     }
-  }, _marked3, null, [[1, 18]]);
+  }, _marked3, null, [[1, 17]]);
 }
 function facebookAuth(_ref4) {
   var payload, token, id, fbId, name, fbToken;

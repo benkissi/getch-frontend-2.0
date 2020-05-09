@@ -39,7 +39,7 @@ function* getInterest({ payload }) {
       }
       return interest;
     });
-    const count = yield updateSearchCount(xToken);
+    const { count } = yield updateSearchCount(xToken);
     console.log("count saga", count);
     yield put(searchSuccess({ data: rankedList, keyword: value, count }));
     const total = yield select(selectInterestTotal);

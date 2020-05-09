@@ -846,7 +846,9 @@ function* getInterest({
 
       return interest;
     });
-    const count = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_2__["updateSearchCount"])(xToken);
+    const {
+      count
+    } = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_2__["updateSearchCount"])(xToken);
     console.log("count saga", count);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_actions__WEBPACK_IMPORTED_MODULE_1__["searchSuccess"])({
       data: rankedList,
@@ -1219,7 +1221,6 @@ function* signInUser({
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_search_actions__WEBPACK_IMPORTED_MODULE_3__["setCount"])(res.searchCount));
     console.log("search count", res.searchCount);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
-    console.log("signin response", userData);
   } catch (error) {
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["siginFailure"])(error));
