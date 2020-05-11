@@ -44,7 +44,6 @@ export function* signUpUser({ payload }) {
       xToken: res.xToken,
       plan: res.plan,
     };
-    console.log("User data", userData);
     yield put(setCurrentUser(userData));
     yield put(setCount(res.searchCount));
     yield put(signupSuccess(true));
