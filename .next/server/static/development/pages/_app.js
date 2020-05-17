@@ -108,7 +108,7 @@ module.exports = require("next/dist/next-server/lib/utils.js");
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout, updateSearchCount */
+/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout, updateSearchCount, verifyPayment */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -128,6 +128,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestStats", function() { return getInterestStats; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSearchCount", function() { return updateSearchCount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyPayment", function() { return verifyPayment; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _endpoints__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./endpoints */ "./api/endpoints.js");
@@ -301,9 +302,7 @@ const getInterestStats = async (adId, token) => {
   return res.data;
 };
 const userLogout = async token => {
-  console.log("user token", token);
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].LOG_OUT;
-  console.log("url", url);
   const headers = {
     Authorization: token
   };
@@ -322,6 +321,21 @@ const updateSearchCount = async token => {
     headers
   });
   console.log("count", res);
+  return res.data;
+};
+const verifyPayment = async (token, plan, ref) => {
+  const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].VERIFY_PAYMENT;
+  const headers = {
+    Authorization: token
+  };
+  const data = {
+    plan,
+    ref
+  };
+  const res = await axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(url, data, {
+    headers
+  });
+  console.log("api", res.data);
   return res.data;
 };
 
@@ -348,7 +362,8 @@ const endpoints = {
   SIGN_UP: `${"http://localhost:9090/"}users/signup`,
   SIGN_IN: `${"http://localhost:9090/"}users/signin`,
   LOG_OUT: `${"http://localhost:9090/"}users/logout`,
-  UPDATE_SEARCH_COUNT: `${"http://localhost:9090/"}facebook/count`
+  UPDATE_SEARCH_COUNT: `${"http://localhost:9090/"}facebook/count`,
+  VERIFY_PAYMENT: `${"http://localhost:9090/"}payments/verify`
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -959,7 +974,7 @@ const makeStore = initialState => {
 /*!************************************!*\
   !*** ./redux/user/user-actions.js ***!
   \************************************/
-/*! exports provided: siginSuccess, signinStart, signupStart, signupSuccess, signupFailure, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure, userLogout, userLogoutSuccess, userLogoutFailure */
+/*! exports provided: siginSuccess, signinStart, signupStart, signupSuccess, signupFailure, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure, userLogout, userLogoutSuccess, userLogoutFailure, verifyPayment, paymentSuccessful, paymentFailure */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -979,6 +994,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogoutSuccess", function() { return userLogoutSuccess; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogoutFailure", function() { return userLogoutFailure; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyPayment", function() { return verifyPayment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paymentSuccessful", function() { return paymentSuccessful; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paymentFailure", function() { return paymentFailure; });
 /* harmony import */ var _user_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./user-types */ "./redux/user/user-types.js");
 
 const siginSuccess = signedIn => ({
@@ -1038,6 +1056,18 @@ const userLogoutSuccess = () => ({
 });
 const userLogoutFailure = error => ({
   type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_FAILURE,
+  payload: error
+});
+const verifyPayment = details => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].VERIFY_PAYMENT,
+  payload: details
+});
+const paymentSuccessful = plan => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].PAYMENT_SUCCESSFUL,
+  payload: plan
+});
+const paymentFailure = error => ({
+  type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].PAYMENT_FAILED,
   payload: error
 });
 
@@ -1114,10 +1144,19 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: null
       });
 
+    case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].PAYMENT_SUCCESSFUL:
+      return _objectSpread({}, state, {
+        currentUser: _objectSpread({}, state.currentUser, {
+          plan: action.payload
+        }),
+        error: null
+      });
+
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_IN_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].AUTH_FB_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].SIGN_UP_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].LOG_OUT_FAILURE:
+    case _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].PAYMENT_FAILED:
       return _objectSpread({}, state, {
         error: action.payload,
         loading: false
@@ -1136,7 +1175,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
 /*!**********************************!*\
   !*** ./redux/user/user-sagas.js ***!
   \**********************************/
-/*! exports provided: setUser, signUpUser, signInUser, facebookAuth, logout, onAddingCurrentUser, onSignupStart, onSigninStart, onAuthFacebook, onLogout, userSagas */
+/*! exports provided: setUser, signUpUser, signInUser, facebookAuth, logout, verifyUserPayment, onAddingCurrentUser, onSignupStart, onSigninStart, onAuthFacebook, onLogout, onVerifyPayment, userSagas */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1146,11 +1185,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signInUser", function() { return signInUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "facebookAuth", function() { return facebookAuth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return logout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyUserPayment", function() { return verifyUserPayment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAddingCurrentUser", function() { return onAddingCurrentUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSignupStart", function() { return onSignupStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSigninStart", function() { return onSigninStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAuthFacebook", function() { return onAuthFacebook; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onLogout", function() { return onLogout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onVerifyPayment", function() { return onVerifyPayment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userSagas", function() { return userSagas; });
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux-saga/effects */ "redux-saga/effects");
 /* harmony import */ var redux_saga_effects__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__);
@@ -1195,7 +1236,6 @@ function* signUpUser({
       xToken: res.xToken,
       plan: res.plan
     };
-    console.log("User data", userData);
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["setCurrentUser"])(userData));
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_search_search_actions__WEBPACK_IMPORTED_MODULE_3__["setCount"])(res.searchCount));
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["signupSuccess"])(true));
@@ -1265,6 +1305,28 @@ function* logout({
     yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["userLogoutFailure"])(error));
   }
 }
+function* verifyUserPayment({
+  payload
+}) {
+  try {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(true));
+    const {
+      token,
+      ref,
+      plan
+    } = payload;
+    const res = yield Object(_api_api__WEBPACK_IMPORTED_MODULE_4__["verifyPayment"])(token, plan, ref);
+    console.log("user saga", res);
+
+    if (res.plan == "PL002") {
+      yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["paymentSuccessful"])(res.plan));
+      console.log("paid");
+    }
+  } catch (error) {
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["isLoading"])(false));
+    yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_2__["paymentFailure"])(error));
+  }
+}
 function* onAddingCurrentUser() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].ADDING_CURRENT_USER, setUser);
 }
@@ -1280,8 +1342,11 @@ function* onAuthFacebook() {
 function* onLogout() {
   yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].LOG_OUT, logout);
 }
+function* onVerifyPayment() {
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_1__["default"].VERIFY_PAYMENT, verifyUserPayment);
+}
 function* userSagas() {
-  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSigninStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSignupStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onLogout)]);
+  yield Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSigninStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onSignupStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onLogout), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__["call"])(onVerifyPayment)]);
 }
 
 /***/ }),
@@ -1311,7 +1376,10 @@ const UserActionTypes = {
   SIGN_UP_FAILURE: "SIGN_UP_FAILURE",
   LOG_OUT: "LOG_OUT",
   LOG_OUT_SUCCESS: "LOG_OUT_SUCCESS",
-  LOG_OUT_FAILURE: "LOG_OUT_FAILURE"
+  LOG_OUT_FAILURE: "LOG_OUT_FAILURE",
+  VERIFY_PAYMENT: "VERIFY_PAYMENT",
+  PAYMENT_SUCCESSFUL: "PAYMENT_SUCCESSFUL",
+  PAYMENT_FAILED: "PAYMENT_FAILED"
 };
 /* harmony default export */ __webpack_exports__["default"] = (UserActionTypes);
 

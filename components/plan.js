@@ -1,4 +1,31 @@
+// import { useRavePayment } from "react-ravepayment";
+import RaveButton from "./raveButton";
 const Plan = (props) => {
+  const config = {
+    txref: "rave-123456",
+    customer_email: props.userEmail,
+    amount: 59,
+    PBFPubKey: process.env.RAVE_PUB_KEY,
+    currency: "USD",
+    country: "GH",
+    production: false,
+  };
+
+  const onPaymentModalClose = () => {
+    console.log(true);
+  };
+
+  const getReference = () => {
+    let text = "";
+    let possible =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
+
+    for (let i = 0; i < 10; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  };
+
   return (
     <div className="wrapper">
       <div className="header">
@@ -23,7 +50,19 @@ const Plan = (props) => {
           </div>
         ))}
       </div>
-      <button>GET ACCESS</button>
+
+      <RaveButton
+        email={props.userEmail}
+        currency="USD"
+        country="GH"
+        reference={getReference()}
+        amount={59}
+        ravePubKey={process.env.RAVE_PUB_KEY}
+        close={onPaymentModalClose}
+        fName={props.fName}
+        lName={props.lName}
+        callback={(response) => props.verifyPayment("Life-time", response)}
+      />
       <style jsx>{`
         .wrapper {
           display: flex;
@@ -78,7 +117,8 @@ const Plan = (props) => {
           width: 10%;
         }
 
-        button {
+         {
+          /* button {
           cursor: pointer;
           height: 40px;
           margin-top: auto;
@@ -86,6 +126,7 @@ const Plan = (props) => {
           border: none;
           border-radius: 4px;
           color: white;
+        } */
         }
 
         .price {

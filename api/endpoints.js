@@ -15,6 +15,7 @@ const endpoints = {
   SIGN_IN: `${process.env.BASE_URL}users/signin`,
   LOG_OUT: `${process.env.BASE_URL}users/logout`,
   UPDATE_SEARCH_COUNT: `${process.env.BASE_URL}facebook/count`,
+  VERIFY_PAYMENT: `${process.env.BASE_URL}payments/verify`,
 };
 
 export default endpoints;

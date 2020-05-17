@@ -60,16 +60,31 @@ export const fbAuthFailure = (error) => ({
   payload: error,
 });
 
-export const userLogout = token => ({
+export const userLogout = (token) => ({
   type: UserActionTypes.LOG_OUT,
   payload: token,
-})
+});
 
 export const userLogoutSuccess = () => ({
-  type: UserActionTypes.LOG_OUT_SUCCESS
-})
+  type: UserActionTypes.LOG_OUT_SUCCESS,
+});
 
-export const userLogoutFailure = error => ({
+export const userLogoutFailure = (error) => ({
   type: UserActionTypes.LOG_OUT_FAILURE,
-  payload: error
-})
+  payload: error,
+});
+
+export const verifyPayment = (details) => ({
+  type: UserActionTypes.VERIFY_PAYMENT,
+  payload: details,
+});
+
+export const paymentSuccessful = (plan) => ({
+  type: UserActionTypes.PAYMENT_SUCCESSFUL,
+  payload: plan,
+});
+
+export const paymentFailure = (error) => ({
+  type: UserActionTypes.PAYMENT_FAILED,
+  payload: error,
+});

@@ -4,7 +4,7 @@
 /*!********************!*\
   !*** ./api/api.js ***!
   \********************/
-/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout, updateSearchCount */
+/*! exports provided: signUp, signIn, fbAuthentication, searchInterest, getInterestSuggestions, compileInterestSuggestions, getProducts, getAdAccounts, fbPaginate, getCampaigns, getAdsets, getAds, getInterestStats, userLogout, updateSearchCount, verifyPayment */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24,6 +24,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestStats", function() { return getInterestStats; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSearchCount", function() { return updateSearchCount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyPayment", function() { return verifyPayment; });
 /* harmony import */ var _babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
@@ -472,23 +473,21 @@ var userLogout = function userLogout(token) {
     while (1) {
       switch (_context14.prev = _context14.next) {
         case 0:
-          console.log("user token", token);
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].LOG_OUT;
-          console.log("url", url);
           headers = {
             Authorization: token
           };
-          _context14.next = 6;
+          _context14.next = 4;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url, {
             headers: headers
           }));
 
-        case 6:
+        case 4:
           res = _context14.sent;
           console.log("res", res);
           return _context14.abrupt("return", res.data);
 
-        case 9:
+        case 7:
         case "end":
           return _context14.stop();
       }
@@ -518,6 +517,37 @@ var updateSearchCount = function updateSearchCount(token) {
         case 7:
         case "end":
           return _context15.stop();
+      }
+    }
+  }, null, null, null, Promise);
+};
+var verifyPayment = function verifyPayment(token, plan, ref) {
+  var url, headers, data, res;
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.async(function verifyPayment$(_context16) {
+    while (1) {
+      switch (_context16.prev = _context16.next) {
+        case 0:
+          url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].VERIFY_PAYMENT;
+          headers = {
+            Authorization: token
+          };
+          data = {
+            plan: plan,
+            ref: ref
+          };
+          _context16.next = 5;
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(url, data, {
+            headers: headers
+          }));
+
+        case 5:
+          res = _context16.sent;
+          console.log("api", res.data);
+          return _context16.abrupt("return", res.data);
+
+        case 8:
+        case "end":
+          return _context16.stop();
       }
     }
   }, null, null, null, Promise);
@@ -560,7 +590,8 @@ var endpoints = {
   SIGN_UP: "".concat("http://localhost:9090/", "users/signup"),
   SIGN_IN: "".concat("http://localhost:9090/", "users/signin"),
   LOG_OUT: "".concat("http://localhost:9090/", "users/logout"),
-  UPDATE_SEARCH_COUNT: "".concat("http://localhost:9090/", "facebook/count")
+  UPDATE_SEARCH_COUNT: "".concat("http://localhost:9090/", "facebook/count"),
+  VERIFY_PAYMENT: "".concat("http://localhost:9090/", "payments/verify")
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -6207,12 +6238,12 @@ module.exports = __webpack_require__(/*! ./dist/pages/_app */ "./node_modules/ne
 
 /***/ "./node_modules/next/dist/build/polyfills/object-assign.js":
 /*!***********************************************************************************************************************!*\
-  !*** delegated ./node_modules/next/dist/build/polyfills/object-assign.js from dll-reference dll_c2e10d183b950a67d9e7 ***!
+  !*** delegated ./node_modules/next/dist/build/polyfills/object-assign.js from dll-reference dll_2adc2403d89adc16ead0 ***!
   \***********************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_c2e10d183b950a67d9e7 */ "dll-reference dll_c2e10d183b950a67d9e7"))("./node_modules/next/dist/build/polyfills/object-assign.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_2adc2403d89adc16ead0 */ "dll-reference dll_2adc2403d89adc16ead0"))("./node_modules/next/dist/build/polyfills/object-assign.js");
 
 /***/ }),
 
@@ -8687,12 +8718,12 @@ process.umask = function() { return 0; };
 
 /***/ "./node_modules/prop-types/checkPropTypes.js":
 /*!*********************************************************************************************************!*\
-  !*** delegated ./node_modules/prop-types/checkPropTypes.js from dll-reference dll_c2e10d183b950a67d9e7 ***!
+  !*** delegated ./node_modules/prop-types/checkPropTypes.js from dll-reference dll_2adc2403d89adc16ead0 ***!
   \*********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_c2e10d183b950a67d9e7 */ "dll-reference dll_c2e10d183b950a67d9e7"))("./node_modules/prop-types/checkPropTypes.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_2adc2403d89adc16ead0 */ "dll-reference dll_2adc2403d89adc16ead0"))("./node_modules/prop-types/checkPropTypes.js");
 
 /***/ }),
 
@@ -9327,12 +9358,12 @@ if (true) {
 
 /***/ "./node_modules/prop-types/lib/ReactPropTypesSecret.js":
 /*!*******************************************************************************************************************!*\
-  !*** delegated ./node_modules/prop-types/lib/ReactPropTypesSecret.js from dll-reference dll_c2e10d183b950a67d9e7 ***!
+  !*** delegated ./node_modules/prop-types/lib/ReactPropTypesSecret.js from dll-reference dll_2adc2403d89adc16ead0 ***!
   \*******************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_c2e10d183b950a67d9e7 */ "dll-reference dll_c2e10d183b950a67d9e7"))("./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_2adc2403d89adc16ead0 */ "dll-reference dll_2adc2403d89adc16ead0"))("./node_modules/prop-types/lib/ReactPropTypesSecret.js");
 
 /***/ }),
 
@@ -9547,12 +9578,12 @@ exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ "./node
 
 /***/ "./node_modules/react-dom/index.js":
 /*!***********************************************************************************************!*\
-  !*** delegated ./node_modules/react-dom/index.js from dll-reference dll_c2e10d183b950a67d9e7 ***!
+  !*** delegated ./node_modules/react-dom/index.js from dll-reference dll_2adc2403d89adc16ead0 ***!
   \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_c2e10d183b950a67d9e7 */ "dll-reference dll_c2e10d183b950a67d9e7"))("./node_modules/react-dom/index.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_2adc2403d89adc16ead0 */ "dll-reference dll_2adc2403d89adc16ead0"))("./node_modules/react-dom/index.js");
 
 /***/ }),
 
@@ -14567,12 +14598,12 @@ var classNamesShape =  true ? prop_types__WEBPACK_IMPORTED_MODULE_0___default.a.
 
 /***/ "./node_modules/react/index.js":
 /*!*******************************************************************************************!*\
-  !*** delegated ./node_modules/react/index.js from dll-reference dll_c2e10d183b950a67d9e7 ***!
+  !*** delegated ./node_modules/react/index.js from dll-reference dll_2adc2403d89adc16ead0 ***!
   \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference dll_c2e10d183b950a67d9e7 */ "dll-reference dll_c2e10d183b950a67d9e7"))("./node_modules/react/index.js");
+module.exports = (__webpack_require__(/*! dll-reference dll_2adc2403d89adc16ead0 */ "dll-reference dll_2adc2403d89adc16ead0"))("./node_modules/react/index.js");
 
 /***/ }),
 
@@ -17781,7 +17812,7 @@ var makeStore = function makeStore(initialState) {
 /*!************************************!*\
   !*** ./redux/user/user-actions.js ***!
   \************************************/
-/*! exports provided: siginSuccess, signinStart, signupStart, signupSuccess, signupFailure, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure, userLogout, userLogoutSuccess, userLogoutFailure */
+/*! exports provided: siginSuccess, signinStart, signupStart, signupSuccess, signupFailure, addingCurrentUser, setCurrentUser, siginFailure, isLoading, authFacebook, facebookAuthSuccess, fbAuthFailure, userLogout, userLogoutSuccess, userLogoutFailure, verifyPayment, paymentSuccessful, paymentFailure */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17801,6 +17832,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogout", function() { return userLogout; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogoutSuccess", function() { return userLogoutSuccess; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userLogoutFailure", function() { return userLogoutFailure; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyPayment", function() { return verifyPayment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paymentSuccessful", function() { return paymentSuccessful; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "paymentFailure", function() { return paymentFailure; });
 /* harmony import */ var _user_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./user-types */ "./redux/user/user-types.js");
 
 var siginSuccess = function siginSuccess(signedIn) {
@@ -17892,6 +17926,24 @@ var userLogoutFailure = function userLogoutFailure(error) {
     payload: error
   };
 };
+var verifyPayment = function verifyPayment(details) {
+  return {
+    type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].VERIFY_PAYMENT,
+    payload: details
+  };
+};
+var paymentSuccessful = function paymentSuccessful(plan) {
+  return {
+    type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].PAYMENT_SUCCESSFUL,
+    payload: plan
+  };
+};
+var paymentFailure = function paymentFailure(error) {
+  return {
+    type: _user_types__WEBPACK_IMPORTED_MODULE_0__["default"].PAYMENT_FAILED,
+    payload: error
+  };
+};
 
 /***/ }),
 
@@ -17970,10 +18022,19 @@ var userReducer = function userReducer() {
         error: null
       });
 
+    case _user_types__WEBPACK_IMPORTED_MODULE_1__["default"].PAYMENT_SUCCESSFUL:
+      return _objectSpread({}, state, {
+        currentUser: _objectSpread({}, state.currentUser, {
+          plan: action.payload
+        }),
+        error: null
+      });
+
     case _user_types__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_IN_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_1__["default"].AUTH_FB_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_UP_FAILURE:
     case _user_types__WEBPACK_IMPORTED_MODULE_1__["default"].LOG_OUT_FAILURE:
+    case _user_types__WEBPACK_IMPORTED_MODULE_1__["default"].PAYMENT_FAILED:
       return _objectSpread({}, state, {
         error: action.payload,
         loading: false
@@ -17992,7 +18053,7 @@ var userReducer = function userReducer() {
 /*!**********************************!*\
   !*** ./redux/user/user-sagas.js ***!
   \**********************************/
-/*! exports provided: setUser, signUpUser, signInUser, facebookAuth, logout, onAddingCurrentUser, onSignupStart, onSigninStart, onAuthFacebook, onLogout, userSagas */
+/*! exports provided: setUser, signUpUser, signInUser, facebookAuth, logout, verifyUserPayment, onAddingCurrentUser, onSignupStart, onSigninStart, onAuthFacebook, onLogout, onVerifyPayment, userSagas */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18002,11 +18063,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signInUser", function() { return signInUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "facebookAuth", function() { return facebookAuth; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return logout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "verifyUserPayment", function() { return verifyUserPayment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAddingCurrentUser", function() { return onAddingCurrentUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSignupStart", function() { return onSignupStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSigninStart", function() { return onSigninStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onAuthFacebook", function() { return onAuthFacebook; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onLogout", function() { return onLogout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onVerifyPayment", function() { return onVerifyPayment; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "userSagas", function() { return userSagas; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
@@ -18022,12 +18085,14 @@ var _marked = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0
     _marked3 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(signInUser),
     _marked4 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(facebookAuth),
     _marked5 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(logout),
-    _marked6 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onAddingCurrentUser),
-    _marked7 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onSignupStart),
-    _marked8 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onSigninStart),
-    _marked9 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onAuthFacebook),
-    _marked10 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onLogout),
-    _marked11 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(userSagas);
+    _marked6 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(verifyUserPayment),
+    _marked7 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onAddingCurrentUser),
+    _marked8 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onSignupStart),
+    _marked9 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onSigninStart),
+    _marked10 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onAuthFacebook),
+    _marked11 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onLogout),
+    _marked12 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(onVerifyPayment),
+    _marked13 = /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(userSagas);
 
 
 
@@ -18111,38 +18176,37 @@ function signUpUser(_ref2) {
             xToken: res.xToken,
             plan: res.plan
           };
-          console.log("User data", userData);
-          _context2.next = 12;
+          _context2.next = 11;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["setCurrentUser"])(userData));
 
-        case 12:
-          _context2.next = 14;
+        case 11:
+          _context2.next = 13;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_search_search_actions__WEBPACK_IMPORTED_MODULE_4__["setCount"])(res.searchCount));
 
-        case 14:
-          _context2.next = 16;
+        case 13:
+          _context2.next = 15;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["signupSuccess"])(true));
 
-        case 16:
-          _context2.next = 18;
+        case 15:
+          _context2.next = 17;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
 
-        case 18:
-          _context2.next = 24;
+        case 17:
+          _context2.next = 23;
           break;
 
-        case 20:
-          _context2.prev = 20;
+        case 19:
+          _context2.prev = 19;
           _context2.t0 = _context2["catch"](1);
-          _context2.next = 24;
+          _context2.next = 23;
           return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["signupFailure"])(_context2.t0));
 
-        case 24:
+        case 23:
         case "end":
           return _context2.stop();
       }
     }
-  }, _marked2, null, [[1, 20]]);
+  }, _marked2, null, [[1, 19]]);
 }
 function signInUser(_ref3) {
   var payload, res, userData;
@@ -18304,28 +18368,65 @@ function logout(_ref5) {
     }
   }, _marked5, null, [[1, 15]]);
 }
-function onAddingCurrentUser() {
-  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onAddingCurrentUser$(_context6) {
+function verifyUserPayment(_ref6) {
+  var payload, token, ref, plan, res;
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function verifyUserPayment$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
-          _context6.next = 2;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].ADDING_CURRENT_USER, setUser);
+          payload = _ref6.payload;
+          _context6.prev = 1;
+          _context6.next = 4;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(true));
 
-        case 2:
+        case 4:
+          token = payload.token, ref = payload.ref, plan = payload.plan;
+          _context6.next = 7;
+          return Object(_api_api__WEBPACK_IMPORTED_MODULE_5__["verifyPayment"])(token, plan, ref);
+
+        case 7:
+          res = _context6.sent;
+          console.log("user saga", res);
+
+          if (!(res.plan == "PL002")) {
+            _context6.next = 13;
+            break;
+          }
+
+          _context6.next = 12;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["paymentSuccessful"])(res.plan));
+
+        case 12:
+          console.log("paid");
+
+        case 13:
+          _context6.next = 21;
+          break;
+
+        case 15:
+          _context6.prev = 15;
+          _context6.t0 = _context6["catch"](1);
+          _context6.next = 19;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["isLoading"])(false));
+
+        case 19:
+          _context6.next = 21;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["put"])(Object(_user_actions__WEBPACK_IMPORTED_MODULE_3__["paymentFailure"])(_context6.t0));
+
+        case 21:
         case "end":
           return _context6.stop();
       }
     }
-  }, _marked6);
+  }, _marked6, null, [[1, 15]]);
 }
-function onSignupStart() {
-  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onSignupStart$(_context7) {
+function onAddingCurrentUser() {
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onAddingCurrentUser$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
         case 0:
           _context7.next = 2;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].SIGN_UP_START, signUpUser);
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].ADDING_CURRENT_USER, setUser);
 
         case 2:
         case "end":
@@ -18334,13 +18435,13 @@ function onSignupStart() {
     }
   }, _marked7);
 }
-function onSigninStart() {
-  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onSigninStart$(_context8) {
+function onSignupStart() {
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onSignupStart$(_context8) {
     while (1) {
       switch (_context8.prev = _context8.next) {
         case 0:
           _context8.next = 2;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].SIGN_IN_START, signInUser);
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].SIGN_UP_START, signUpUser);
 
         case 2:
         case "end":
@@ -18349,13 +18450,13 @@ function onSigninStart() {
     }
   }, _marked8);
 }
-function onAuthFacebook() {
-  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onAuthFacebook$(_context9) {
+function onSigninStart() {
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onSigninStart$(_context9) {
     while (1) {
       switch (_context9.prev = _context9.next) {
         case 0:
           _context9.next = 2;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].AUTH_FACEBOOK, facebookAuth);
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].SIGN_IN_START, signInUser);
 
         case 2:
         case "end":
@@ -18364,13 +18465,13 @@ function onAuthFacebook() {
     }
   }, _marked9);
 }
-function onLogout() {
-  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onLogout$(_context10) {
+function onAuthFacebook() {
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onAuthFacebook$(_context10) {
     while (1) {
       switch (_context10.prev = _context10.next) {
         case 0:
           _context10.next = 2;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].LOG_OUT, logout);
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].AUTH_FACEBOOK, facebookAuth);
 
         case 2:
         case "end":
@@ -18379,13 +18480,13 @@ function onLogout() {
     }
   }, _marked10);
 }
-function userSagas() {
-  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function userSagas$(_context11) {
+function onLogout() {
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onLogout$(_context11) {
     while (1) {
       switch (_context11.prev = _context11.next) {
         case 0:
           _context11.next = 2;
-          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onSigninStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onSignupStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onLogout)]);
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].LOG_OUT, logout);
 
         case 2:
         case "end":
@@ -18393,6 +18494,36 @@ function userSagas() {
       }
     }
   }, _marked11);
+}
+function onVerifyPayment() {
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function onVerifyPayment$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.next = 2;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["takeLatest"])(_user_types__WEBPACK_IMPORTED_MODULE_2__["default"].VERIFY_PAYMENT, verifyUserPayment);
+
+        case 2:
+        case "end":
+          return _context12.stop();
+      }
+    }
+  }, _marked12);
+}
+function userSagas() {
+  return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function userSagas$(_context13) {
+    while (1) {
+      switch (_context13.prev = _context13.next) {
+        case 0:
+          _context13.next = 2;
+          return Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["all"])([Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onAuthFacebook), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onAddingCurrentUser), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onSigninStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onSignupStart), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onLogout), Object(redux_saga_effects__WEBPACK_IMPORTED_MODULE_1__["call"])(onVerifyPayment)]);
+
+        case 2:
+        case "end":
+          return _context13.stop();
+      }
+    }
+  }, _marked13);
 }
 
 /***/ }),
@@ -18422,7 +18553,10 @@ var UserActionTypes = {
   SIGN_UP_FAILURE: "SIGN_UP_FAILURE",
   LOG_OUT: "LOG_OUT",
   LOG_OUT_SUCCESS: "LOG_OUT_SUCCESS",
-  LOG_OUT_FAILURE: "LOG_OUT_FAILURE"
+  LOG_OUT_FAILURE: "LOG_OUT_FAILURE",
+  VERIFY_PAYMENT: "VERIFY_PAYMENT",
+  PAYMENT_SUCCESSFUL: "PAYMENT_SUCCESSFUL",
+  PAYMENT_FAILED: "PAYMENT_FAILED"
 };
 /* harmony default export */ __webpack_exports__["default"] = (UserActionTypes);
 
@@ -18495,14 +18629,14 @@ module.exports = __webpack_require__(/*! /home/benkissi/projects/getch/getch-fro
 
 /***/ }),
 
-/***/ "dll-reference dll_c2e10d183b950a67d9e7":
+/***/ "dll-reference dll_2adc2403d89adc16ead0":
 /*!*******************************************!*\
-  !*** external "dll_c2e10d183b950a67d9e7" ***!
+  !*** external "dll_2adc2403d89adc16ead0" ***!
   \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = dll_c2e10d183b950a67d9e7;
+module.exports = dll_2adc2403d89adc16ead0;
 
 /***/ })
 

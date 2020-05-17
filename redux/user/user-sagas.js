@@ -11,9 +11,17 @@ import {
   fbAuthFailure,
   userLogoutSuccess,
   userLogoutFailure,
+  paymentSuccessful,
+  paymentFailure,
 } from "./user-actions";
 import { setCount } from "../search/search-actions";
-import { fbAuthentication, signUp, signIn, userLogout } from "../../api/api";
+import {
+  fbAuthentication,
+  signUp,
+  signIn,
+  userLogout,
+  verifyPayment,
+} from "../../api/api";
 
 export function* setUser({ payload }) {
   try {
@@ -105,6 +113,22 @@ export function* logout({ payload }) {
   }
 }
 
+export function* verifyUserPayment({ payload }) {
+  try {
+    yield put(isLoading(true));
+    const { token, ref, plan } = payload;
+    const res = yield verifyPayment(token, plan, ref);
+    console.log("user saga", res);
+    if (res.plan == "PL002") {
+      yield put(paymentSuccessful(res.plan));
+      console.log("paid");
+    }
+  } catch (error) {
+    yield put(isLoading(false));
+    yield put(paymentFailure(error));
+  }
+}
+
 export function* onAddingCurrentUser() {
   yield takeLatest(UserActionTypes.ADDING_CURRENT_USER, setUser);
 }
@@ -125,6 +149,10 @@ export function* onLogout() {
   yield takeLatest(UserActionTypes.LOG_OUT, logout);
 }
 
+export function* onVerifyPayment() {
+  yield takeLatest(UserActionTypes.VERIFY_PAYMENT, verifyUserPayment);
+}
+
 export function* userSagas() {
   yield all([
     call(onAuthFacebook),
@@ -132,5 +160,6 @@ export function* userSagas() {
     call(onSigninStart),
     call(onSignupStart),
     call(onLogout),
+    call(onVerifyPayment),
   ]);
 }

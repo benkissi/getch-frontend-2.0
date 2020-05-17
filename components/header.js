@@ -23,6 +23,7 @@ const Header = (props) => {
       <div className="logo" onClick={goHome}>
         <img src="/images/newLogo.svg" />
       </div>
+
       {isFreeUser() ? (
         <div className="count">
           <p>

@@ -204,9 +204,7 @@ export const getInterestStats = async (adId, token) => {
 };
 
 export const userLogout = async (token) => {
-  console.log("user token", token);
   const url = endpoints.LOG_OUT;
-  console.log("url", url);
 
   const headers = {
     Authorization: token,
@@ -230,5 +228,22 @@ export const updateSearchCount = async (token) => {
 
   const res = await axios.get(url, { headers });
   console.log("count", res);
+  return res.data;
+};
+
+export const verifyPayment = async (token, plan, ref) => {
+  const url = endpoints.VERIFY_PAYMENT;
+
+  const headers = {
+    Authorization: token,
+  };
+
+  const data = {
+    plan,
+    ref,
+  };
+
+  const res = await axios.post(url, data, { headers });
+  console.log("api", res.data);
   return res.data;
 };

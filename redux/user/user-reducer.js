@@ -52,10 +52,20 @@ const userReducer = (state = INITIAL_STATE, action) => {
         logout: true,
         error: null,
       };
+    case UserActionTypes.PAYMENT_SUCCESSFUL:
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          plan: action.payload,
+        },
+        error: null,
+      };
     case UserActionTypes.SIGN_IN_FAILURE:
     case UserActionTypes.AUTH_FB_FAILURE:
     case UserActionTypes.SIGN_UP_FAILURE:
     case UserActionTypes.LOG_OUT_FAILURE:
+    case UserActionTypes.PAYMENT_FAILED:
       return {
         ...state,
         error: action.payload,
