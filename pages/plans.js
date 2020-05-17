@@ -98,6 +98,7 @@ const Plans = (props) => {
           fName={props.user ? props.user.name.split[0] : ""}
           lName={props.user ? props.user.name.split[1] : ""}
           verifyPayment={paymentCallback}
+          currentPlan={props.user ? props.user.plan : ""}
         />
       </div>
       <style jsx>{`
@@ -120,7 +121,7 @@ const Plans = (props) => {
           display: flex;
           justify-content: center;
           width: 100%;
-          margin-top: 50px;
+          margin-top: 20px;
         }
       `}</style>
     </div>

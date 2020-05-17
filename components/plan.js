@@ -29,6 +29,7 @@ const Plan = (props) => {
   return (
     <div className="wrapper">
       <div className="header">
+        {props.currentPlan === "PL002" ? <p id="current">Current Plan</p> : ""}
         <div className="plan-image">
           <img src={props.image} />
         </div>
@@ -62,6 +63,7 @@ const Plan = (props) => {
         fName={props.fName}
         lName={props.lName}
         callback={(response) => props.verifyPayment("Life-time", response)}
+        disabled={props.currentPlan === "PL002"}
       />
       <style jsx>{`
         .wrapper {
@@ -117,16 +119,11 @@ const Plan = (props) => {
           width: 10%;
         }
 
-         {
-          /* button {
-          cursor: pointer;
-          height: 40px;
-          margin-top: auto;
-          background-color: #3dcf8e;
-          border: none;
-          border-radius: 4px;
+        #current {
+          background: #3dcf8e;
+          padding: 5px;
           color: white;
-        } */
+          font-weight: bold;
         }
 
         .price {

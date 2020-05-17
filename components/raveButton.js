@@ -2,7 +2,6 @@ import { useState } from "react";
 const RaveButton = (props) => {
   const [state, setState] = useState({
     text: props.text || "Make Payment",
-    class: props.class || "",
     currency: props.currency || "USD",
     country: props.country || "GH",
   });
@@ -34,7 +33,11 @@ const RaveButton = (props) => {
   };
   return (
     <div className="wrapper">
-      <button className={state.class} onClick={payWithRave}>
+      <button
+        className={`${props.disabled ? "disabled" : "activated"}`}
+        disabled={props.disabled}
+        onClick={payWithRave}
+      >
         {state.text}
       </button>
 
@@ -45,15 +48,24 @@ const RaveButton = (props) => {
         }
 
         button {
-          cursor: pointer;
           height: 40px;
           margin-top: auto;
-          background-color: #3dcf8e;
           border: none;
           border-radius: 4px;
           color: white;
           width: 100%;
           text-transform: uppercase;
+        }
+
+        .disabled {
+          background-color: #eee;
+          color: gray;
+          cursor: not-allowed;
+        }
+
+        .activated {
+          background-color: #3dcf8e;
+          cursor: pointer;
         }
       `}</style>
     </div>
