@@ -567,6 +567,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_toastify__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var react_toastify_dist_ReactToastify_min_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-toastify/dist/ReactToastify.min.css */ "./node_modules/react-toastify/dist/ReactToastify.min.css");
 /* harmony import */ var react_toastify_dist_ReactToastify_min_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_toastify_dist_ReactToastify_min_css__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_gtm_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-gtm-module */ "react-gtm-module");
+/* harmony import */ var react_gtm_module__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_gtm_module__WEBPACK_IMPORTED_MODULE_7__);
 var _jsxFileName = "/home/benkissi/projects/getch/getch-frontend-2.0/pages/_app.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
@@ -580,15 +582,23 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
  // import "react-toastify/scss/main.scss";
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = (next_redux_wrapper__WEBPACK_IMPORTED_MODULE_3___default()(_redux_store__WEBPACK_IMPORTED_MODULE_4__["default"], {
   debug: true
 })(class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_2___default.a {
+  componentDidMount() {
+    const tagManagerArgs = {
+      gtmId: "GTM-WZH3SMB"
+    };
+    react_gtm_module__WEBPACK_IMPORTED_MODULE_7___default.a.initialize(tagManagerArgs);
+  }
+
   render() {
     const defaultLayout = props => __jsx("div", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 13,
+        lineNumber: 21,
         columnNumber: 40
       }
     }, props.children);
@@ -604,21 +614,21 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 17,
+        lineNumber: 26,
         columnNumber: 9
       }
     }, __jsx(Layout, {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 18,
+        lineNumber: 27,
         columnNumber: 11
       }
     }, __jsx(Component, _extends({}, pageProps, {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 19,
+        lineNumber: 28,
         columnNumber: 13
       }
     })), __jsx(react_toastify__WEBPACK_IMPORTED_MODULE_5__["ToastContainer"], {
@@ -634,7 +644,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 20,
+        lineNumber: 29,
         columnNumber: 13
       }
     })));
@@ -1481,6 +1491,17 @@ module.exports = require("next-redux-wrapper");
 /***/ (function(module, exports) {
 
 module.exports = require("react");
+
+/***/ }),
+
+/***/ "react-gtm-module":
+/*!***********************************!*\
+  !*** external "react-gtm-module" ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-gtm-module");
 
 /***/ }),
 
