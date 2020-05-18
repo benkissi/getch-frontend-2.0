@@ -29,17 +29,17 @@ function Signin(props) {
   }, [props.user]);
 
   useEffect(() => {
-    if(props.userError){
+    if (props.userError) {
       toast.error(`There was an error. ${props.userError.message}`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-        });
-  }
-  }, [props.userError])
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  }, [props.userError]);
 
   useEffect(() => {
     if (current === "signup") {
@@ -161,11 +161,11 @@ function Signin(props) {
         <div className="loader">
           <Loader type="Bars" color="#fff" height={20} width={50} />
         </div>
-      )
-    }else if(state.current == "signup"){
-      return "Sign up"
-    }else {
-      return "Sign in"
+      );
+    } else if (state.current == "signup") {
+      return "Sign up";
+    } else {
+      return "Sign in";
     }
   };
 
@@ -320,6 +320,35 @@ function Signin(props) {
         .error {
           color: red;
         }
+
+        @media screen and (max-width: 480px) {
+          #wrapper {
+            flex-direction: column;
+            min-height: 100vh;
+          }
+
+          .pane {
+            flex: 0;
+            padding: 20px 0;
+          }
+
+          .pane img {
+            width: 100px;
+          }
+
+          .pane .slogan {
+            font-size: 12px;
+          }
+
+          .auth {
+            justify-content: center;
+            align-items: center;
+          }
+
+          .details {
+            width: 90%;
+          }
+        }
       `}</style>
     </div>
   );
@@ -330,7 +359,7 @@ Signin.Layout = (props) => <div>{props.children}</div>;
 const mapStateToProps = (state) => ({
   user: state.user.currentUser,
   loading: state.user.loading,
-  userError: state.user.error
+  userError: state.user.error,
 });
 
 const mapDispatchToProps = (dispatch) => ({
