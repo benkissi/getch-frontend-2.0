@@ -36,7 +36,7 @@ const Onboarding = (props) => {
             autoLoad={false}
             fields="name,email,id"
             onClick={faceAuthStart}
-            scope="ads_management, email"
+            scope="email"
             callback={responseFacebook}
             render={(renderProps) => (
               <div className="connect">
