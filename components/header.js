@@ -1,5 +1,6 @@
 import Router from "next/router";
 import { connect } from "react-redux";
+import { Button } from "antd";
 
 const Header = (props) => {
   const handleSettingsClick = () => {
@@ -8,6 +9,10 @@ const Header = (props) => {
 
   const goHome = () => {
     Router.push("/");
+  };
+
+  const goToPlans = () => {
+    Router.push("/plans");
   };
 
   const isFreeUser = () => {
@@ -40,11 +45,18 @@ const Header = (props) => {
       )}
 
       <div id="actions">
-        {props.actions
-          ? props.actions.map((action, index) => (
-              <div key={index}>{action}</div>
-            ))
-          : ""}
+        {isFreeUser() ? (
+          <Button
+            hidden={props.user && !props.user.plan == "PL001"}
+            style={{ background: "#f86326", border: "none", color: "white" }}
+            onClick={goToPlans}
+          >
+            Get life time access
+          </Button>
+        ) : (
+          ""
+        )}
+
         <div className="profile-wrapper" onClick={handleSettingsClick}>
           <img src="/images/user.svg" />
         </div>

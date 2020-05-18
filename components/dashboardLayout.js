@@ -35,29 +35,6 @@ const DashboardLayout = (props) => {
     }
   }, [props.user]);
 
-  const faceAuthStart = () => {
-    console.log("#### FB auth start");
-  };
-
-  const responseFacebook = async (res) => {
-    const { accessToken, userID } = res;
-    console.log("fb", res);
-    authFb(accessToken, user.id, userID);
-  };
-
-  const goToPlans = () => {
-    Router.push("/plans");
-  };
-
-  const actions = [
-    <Button
-      hidden={props.user && !props.user.plan == "PL001"}
-      style={{ background: "#f86326", border: "none", color: "white" }}
-      onClick={goToPlans}
-    >
-      Get life time access
-    </Button>,
-  ];
   return (
     <div className="layout">
       <Row justify="end">
@@ -79,7 +56,7 @@ const DashboardLayout = (props) => {
           justify="center"
         >
           <div className="header">
-            <Header actions={actions} />
+            <Header />
           </div>
           <Onboarding />
           <div className="children">{props.children}</div>
