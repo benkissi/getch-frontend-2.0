@@ -309,7 +309,7 @@ const Index = (props) => {
 
         .inner {
           position: fixed;
-          top: 70px;
+          top: 60px;
           width: 81%;
           background-color: white;
           z-index: 100;
