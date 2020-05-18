@@ -15,6 +15,7 @@ import {
   addScore,
   getInterestNames,
   containsKeyword,
+  addLinks,
 } from "../../utils/search";
 import SearchActionTypes from "./search-types";
 
@@ -37,6 +38,11 @@ function* getInterest({ payload }) {
       if (exist !== -1) {
         interest["relevance"] = interest.relevance + 3;
       }
+      const searchName = interest.name.toLowerCase().split(" ").join("+");
+      interest["links"] = [
+        `https://www.facebook.com/search/pages/?q=${searchName}`,
+        `https://www.google.com/search?q=${searchName}`,
+      ];
       return interest;
     });
     const { count } = yield updateSearchCount(xToken);

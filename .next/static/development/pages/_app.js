@@ -17835,6 +17835,8 @@ function getInterest(_ref) {
               interest["relevance"] = interest.relevance + 3;
             }
 
+            var searchName = interest.name.toLowerCase().split(" ").join("+");
+            interest["links"] = ["https://www.facebook.com/search/pages/?q=".concat(searchName), "https://www.google.com/search?q=".concat(searchName)];
             return interest;
           });
           _context.next = 18;
@@ -18756,7 +18758,7 @@ var UserActionTypes = {
 /*!*************************!*\
   !*** ./utils/search.js ***!
   \*************************/
-/*! exports provided: addScore, getInterestNames, containsKeyword, splitArray */
+/*! exports provided: addScore, getInterestNames, containsKeyword, splitArray, addLinks */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18765,13 +18767,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestNames", function() { return getInterestNames; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "containsKeyword", function() { return containsKeyword; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "splitArray", function() { return splitArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addLinks", function() { return addLinks; });
 var addScore = function addScore(data, score) {
   var updated = data.map(function (item) {
-    if (item.hasOwnProperty('relevance')) {
+    if (item.hasOwnProperty("relevance")) {
       return item.relevance = item.relevance + score;
     }
 
-    item['relevance'] = score;
+    item["relevance"] = score;
     return item;
   });
   return updated;
@@ -18802,6 +18805,13 @@ var splitArray = function splitArray(array, size) {
   }
 
   return arraySplit;
+};
+var addLinks = function addLinks(array) {
+  var updated = data.map(function (item) {
+    item["links"] = ["https://www.facebook.com/search/pages/?q=".concat(item.name), "https://www.google.com/search?q=".concat(item.name)];
+    return item;
+  });
+  return updated;
 };
 
 /***/ }),

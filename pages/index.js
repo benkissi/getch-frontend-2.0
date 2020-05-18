@@ -331,6 +331,14 @@ const Index = (props) => {
         .header {
           margin-bottom: 20px;
         }
+
+        :global(.links) {
+          margin-right: 15px;
+        }
+
+        :global(.links img) {
+          width: 20px;
+        }
       `}</style>
     </div>
   );

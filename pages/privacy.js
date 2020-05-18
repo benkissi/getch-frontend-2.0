@@ -92,7 +92,8 @@ function Privacy() {
         }
 
         .header {
-          margin-top: 100px;
+          margin-top: 80px;
+          margin-bottom: 50px;
         }
       `}</style>
     </div>

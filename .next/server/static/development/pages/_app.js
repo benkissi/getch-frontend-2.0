@@ -869,6 +869,8 @@ function* getInterest({
         interest["relevance"] = interest.relevance + 3;
       }
 
+      const searchName = interest.name.toLowerCase().split(" ").join("+");
+      interest["links"] = [`https://www.facebook.com/search/pages/?q=${searchName}`, `https://www.google.com/search?q=${searchName}`];
       return interest;
     });
     const {
@@ -1399,7 +1401,7 @@ const UserActionTypes = {
 /*!*************************!*\
   !*** ./utils/search.js ***!
   \*************************/
-/*! exports provided: addScore, getInterestNames, containsKeyword, splitArray */
+/*! exports provided: addScore, getInterestNames, containsKeyword, splitArray, addLinks */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1408,13 +1410,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInterestNames", function() { return getInterestNames; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "containsKeyword", function() { return containsKeyword; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "splitArray", function() { return splitArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addLinks", function() { return addLinks; });
 const addScore = (data, score) => {
   const updated = data.map(item => {
-    if (item.hasOwnProperty('relevance')) {
+    if (item.hasOwnProperty("relevance")) {
       return item.relevance = item.relevance + score;
     }
 
-    item['relevance'] = score;
+    item["relevance"] = score;
     return item;
   });
   return updated;
@@ -1445,6 +1448,13 @@ const splitArray = (array, size) => {
   }
 
   return arraySplit;
+};
+const addLinks = array => {
+  const updated = data.map(item => {
+    item["links"] = [`https://www.facebook.com/search/pages/?q=${item.name}`, `https://www.google.com/search?q=${item.name}`];
+    return item;
+  });
+  return updated;
 };
 
 /***/ }),
