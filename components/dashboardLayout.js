@@ -37,39 +37,19 @@ const DashboardLayout = (props) => {
 
   return (
     <div className="layout">
-      <Row justify="end">
-        {/* <Col
-          style={{
-            position: "relative",
-            height: "100vh",
-            width: "16.66666667%",
-          }}
-          span={4}
-        >
-          <SideBar />
-        </Col> */}
-        <Col
-          style={{ padding: "0 20px 0 20px", minHeight: "100vh" }}
-          span={24}
-          className="child-container"
-          // centered
-          justify="center"
-        >
-          <div className="header">
-            <Header />
-          </div>
-          <Onboarding />
-          <div className="children">{props.children}</div>
+      <div className="header">
+        <Header />
+      </div>
+      <Onboarding />
+      <div className="children">{props.children}</div>
 
-          <footer>
-            <div className="footer">
-              <p className="footer-item">
-                &copy; 2010 - {new Date().getFullYear()}, Getch.
-              </p>
-            </div>
-          </footer>
-        </Col>
-      </Row>
+      <footer>
+        <div className="footer">
+          <p className="footer-item">
+            &copy; 2010 - {new Date().getFullYear()}, Getch.
+          </p>
+        </div>
+      </footer>
 
       <style jsx>{`
         .layout {
@@ -116,6 +96,16 @@ const DashboardLayout = (props) => {
           background-color: white;
           color: black;
           text-align: center;
+        }
+
+        @media screen and (max-width: 480px) {
+          .layout {
+            padding: 10px;
+          }
+
+          .children {
+            width: 100%;
+          }
         }
       `}</style>
     </div>

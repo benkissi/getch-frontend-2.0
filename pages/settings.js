@@ -11,21 +11,33 @@ const Settings = (props) => {
 
   return (
     <div className="wrapper">
-      <div className="title">
-        <h2>Settings</h2>
-      </div>
-
-      <div id="logout">
-        <p>Logout</p>
-        <div id="button">
-          <Button onClick={handleLogout}>Logout</Button>
+      <div className="inner">
+        <div className="title">
+          <h2>Settings</h2>
         </div>
-      </div>
-      <div className="divider"></div>
-      <div id="plan">
-        <p>Plan</p>
-        <div id="value">
-          <p>Life-time access</p>
+        <div id="email">
+          <p>Email</p>
+          <div id="value">
+            <p>{props.user ? props.user.email : ""}</p>
+          </div>
+        </div>
+        <div className="divider"></div>
+        <div id="logout">
+          <p>Logout</p>
+          <div id="button">
+            <Button onClick={handleLogout}>Logout</Button>
+          </div>
+        </div>
+        <div className="divider"></div>
+        <div id="plan">
+          <p>Plan</p>
+          <div id="value">
+            <p>
+              {props.user && props.user.plan === "PL002"
+                ? "Life-time acess"
+                : "Trial"}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -35,6 +47,7 @@ const Settings = (props) => {
           flex-direction: column;
           margin-top: 100px;
           width: 100%;
+          align-items: center;
           justify-content: center;
         }
 
@@ -46,13 +59,11 @@ const Settings = (props) => {
           display: flex;
           width: 100%;
           align-items: center;
-          justify-content: center;
         }
         .title {
           display: flex;
           width: 100%;
           align-items: center;
-          justify-content: center;
         }
 
         #logout #button {
@@ -63,7 +74,16 @@ const Settings = (props) => {
           display: flex;
           width: 100%;
           align-items: center;
-          justify-content: center;
+        }
+
+        #email {
+          display: flex;
+          width: 100%;
+          align-items: center;
+        }
+
+        #email #value {
+          margin-left: 50%;
         }
 
         #plan #value {
@@ -73,9 +93,19 @@ const Settings = (props) => {
         .divider {
           margin-top: 30px;
           margin-bottom: 30px;
-          width: 60%;
+          width: 70%;
           border-bottom: solid 1px #eee;
-          align-self: center;
+        }
+
+        .inner {
+          width: 100%;
+          padding-right: 20px;
+        }
+
+        @media screen and (max-width: 480px) {
+          .divider {
+            width: 100%;
+          }
         }
       `}</style>
     </div>

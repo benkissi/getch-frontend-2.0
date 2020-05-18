@@ -228,15 +228,6 @@ const Index = (props) => {
                 <div className="button">
                   <Button onClick={handleExport}>Download as CSV</Button>
                 </div>
-                {/* <div className="divider"></div>
-                <div className="button">
-                  <Button onClick={handleExport}>Save as project</Button>
-                </div>
-                <div className="button">
-                  <Button color="#4e54c8" onClick={handleExport}>
-                    Save to Facebook
-                  </Button>
-                </div> */}
               </div>
             </div>
           </div>
@@ -338,6 +329,26 @@ const Index = (props) => {
 
         :global(.links img) {
           width: 20px;
+        }
+
+        @media screen and (max-width: 480px) {
+          .wrapper {
+            width: 100%;
+          }
+
+          .top {
+            margin-top: 50px;
+          }
+
+          .inner {
+            right: 0;
+            width: 100%;
+            padding: 20px;
+          }
+
+          .inner .controls {
+            flex-direction: column;
+          }
         }
       `}</style>
     </div>
