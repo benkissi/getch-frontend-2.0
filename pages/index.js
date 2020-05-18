@@ -52,7 +52,7 @@ const Index = (props) => {
       };
       addUser(userData);
     } else if (user) {
-      console.log(user);
+      console.log("user available");
     } else {
       router.push("/signup");
     }

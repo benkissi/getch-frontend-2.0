@@ -26,7 +26,7 @@ const Header = (props) => {
   return (
     <div id="wrapper">
       <div className="logo" onClick={goHome}>
-        <img src="/images/newLogo.svg" />
+        <img src="/images/newLogoX.svg" />
       </div>
 
       {isFreeUser() ? (

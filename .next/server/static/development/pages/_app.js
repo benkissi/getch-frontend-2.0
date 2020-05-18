@@ -870,7 +870,9 @@ function* getInterest({
       }
 
       const searchName = interest.name.toLowerCase().split(" ").join("+");
-      interest["links"] = [`https://www.facebook.com/search/pages/?q=${searchName}`, `https://www.google.com/search?q=${searchName}`];
+      interest["links"] = [`https://www.facebook.com/search/pages/?q=${searchName}`, `https://www.google.com/search?q=${searchName}`]; // const formatter = new Intl.NumberFormat("en-US");
+      // interest["audience_size"] = formatter.format(interest["audience_size"]);
+
       return interest;
     });
     const {

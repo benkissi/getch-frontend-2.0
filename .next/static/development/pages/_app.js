@@ -17836,7 +17836,9 @@ function getInterest(_ref) {
             }
 
             var searchName = interest.name.toLowerCase().split(" ").join("+");
-            interest["links"] = ["https://www.facebook.com/search/pages/?q=".concat(searchName), "https://www.google.com/search?q=".concat(searchName)];
+            interest["links"] = ["https://www.facebook.com/search/pages/?q=".concat(searchName), "https://www.google.com/search?q=".concat(searchName)]; // const formatter = new Intl.NumberFormat("en-US");
+            // interest["audience_size"] = formatter.format(interest["audience_size"]);
+
             return interest;
           });
           _context.next = 18;

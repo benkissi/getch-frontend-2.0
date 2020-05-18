@@ -13,7 +13,6 @@ const Onboarding = (props) => {
 
   const responseFacebook = async (res) => {
     const { accessToken, userID, name } = res;
-    console.log("fb", res);
     authFb(accessToken, user.id, userID, name);
   };
   return (

@@ -12,7 +12,10 @@ export const tableColumns = [
     width: 80,
     dataIndex: "audience_size",
     key: "audience",
-    sorter: (a, b) => a.name.length - b.name.length,
+    render: (item) => {
+      const formatter = new Intl.NumberFormat("en-US");
+      return <p>{formatter.format(item)}</p>;
+    },
   },
   {
     title: "Topic",
