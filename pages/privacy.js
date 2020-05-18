@@ -1,8 +1,9 @@
-import DashboardLayout from "../components/dashboardLayout";
+import Header from "../components/header";
 
 function Privacy() {
   return (
     <div className="wrapper">
+      <Header />
       <div className="header">
         <h3>Privacy Policy</h3>
         <p>Last edited: January 2020</p>
@@ -84,14 +85,18 @@ function Privacy() {
         .wrapper {
           display: flex;
           flex-direction: column;
-          margin-top: 150px;
           font-size: 16px;
+          padding-left: 100px;
+          padding-right: 100px;
+          margin-bottom: 50px;
+        }
+
+        .header {
+          margin-top: 100px;
         }
       `}</style>
     </div>
   );
 }
-
-Privacy.Layout = DashboardLayout;
 
 export default Privacy;
