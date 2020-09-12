@@ -45,20 +45,21 @@ var signUp = function signUp(email, password) {
         case 0:
           console.log("getting", email, password);
           url = _endpoints__WEBPACK_IMPORTED_MODULE_3__["default"].SIGN_UP;
+          console.log('url', url);
           data = {
             email: email,
             password: password
           };
-          _context.next = 5;
+          _context.next = 6;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(url, data));
 
-        case 5:
+        case 6:
           res = _context.sent;
           token = res.headers["x-auth"].replace("Bearer ", "");
           res.data["xToken"] = token;
           return _context.abrupt("return", res.data);
 
-        case 9:
+        case 10:
         case "end":
           return _context.stop();
       }
@@ -566,32 +567,32 @@ var verifyPayment = function verifyPayment(token, plan, ref) {
 __webpack_require__.r(__webpack_exports__);
 var endpoints = {
   GET_PRODUCTS: function GET_PRODUCTS(shop) {
-    return "".concat("http://localhost:9090/", "shopify/products/").concat(shop);
+    return "".concat("http://localhost:8080/", "shopify/products/").concat(shop);
   },
-  FB_AUTH: "".concat("http://localhost:9090/", "facebook/auth"),
+  FB_AUTH: "".concat("http://localhost:8080/", "facebook/auth"),
   FB_INTEREST_SEARCH: function FB_INTEREST_SEARCH(apiVersion) {
     return "https://graph.facebook.com/v".concat(apiVersion, "/search");
   },
   GET_ADACCOUNTS: function GET_ADACCOUNTS(fbId) {
-    return "".concat("http://localhost:9090/", "facebook/adaccounts/").concat(fbId);
+    return "".concat("http://localhost:8080/", "facebook/adaccounts/").concat(fbId);
   },
   GET_CAMPAIGNS: function GET_CAMPAIGNS(accountId) {
-    return "".concat("http://localhost:9090/", "facebook/campaigns/").concat(accountId);
+    return "".concat("http://localhost:8080/", "facebook/campaigns/").concat(accountId);
   },
   GET_ADSETS: function GET_ADSETS(campaignId) {
-    return "".concat("http://localhost:9090/", "facebook/adsets/").concat(campaignId);
+    return "".concat("http://localhost:8080/", "facebook/adsets/").concat(campaignId);
   },
   GET_ADS: function GET_ADS(adsetId) {
-    return "".concat("http://localhost:9090/", "facebook/ads/").concat(adsetId);
+    return "".concat("http://localhost:8080/", "facebook/ads/").concat(adsetId);
   },
   GET_STATS: function GET_STATS(adId) {
-    return "".concat("http://localhost:9090/", "facebook/stats/").concat(adId);
+    return "".concat("http://localhost:8080/", "facebook/stats/").concat(adId);
   },
-  SIGN_UP: "".concat("http://localhost:9090/", "users/signup"),
-  SIGN_IN: "".concat("http://localhost:9090/", "users/signin"),
-  LOG_OUT: "".concat("http://localhost:9090/", "users/logout"),
-  UPDATE_SEARCH_COUNT: "".concat("http://localhost:9090/", "facebook/count"),
-  VERIFY_PAYMENT: "".concat("http://localhost:9090/", "payments/verify")
+  SIGN_UP: "".concat("http://localhost:8080/", "users/signup"),
+  SIGN_IN: "".concat("http://localhost:8080/", "users/signin"),
+  LOG_OUT: "".concat("http://localhost:8080/", "users/logout"),
+  UPDATE_SEARCH_COUNT: "".concat("http://localhost:8080/", "facebook/count"),
+  VERIFY_PAYMENT: "".concat("http://localhost:8080/", "payments/verify")
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -17464,7 +17465,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _jsxFileName = "/home/benkissi/projects/getch/getch-frontend-2.0/pages/_app.js";
+var _jsxFileName = "/mnt/c/Users/Ben Kissi/Documents/code/getch/getch-frontend-2.0/pages/_app.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement;
 
@@ -18826,7 +18827,7 @@ var addLinks = function addLinks(array) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! next-client-pages-loader?page=%2F_app&absolutePagePath=private-next-pages%2F_app.js! */"./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?page=%2F_app&absolutePagePath=private-next-pages%2F_app.js!./");
-module.exports = __webpack_require__(/*! /home/benkissi/projects/getch/getch-frontend-2.0/node_modules/next/dist/client/router.js */"./node_modules/next/dist/client/router.js");
+module.exports = __webpack_require__(/*! /mnt/c/Users/Ben Kissi/Documents/code/getch/getch-frontend-2.0/node_modules/next/dist/client/router.js */"./node_modules/next/dist/client/router.js");
 
 
 /***/ }),

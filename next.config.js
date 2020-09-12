@@ -21,7 +21,7 @@ module.exports = withCSS(
       },
       env: {
         JWT_SECRET: process.env.JWT_SECRET,
-        FB_APP_ID: process.env.FB_APP_ID,
+        FB_APP_ID: process.env.FB_APP_ID, 
         FB_APP_SECRET: process.env.FB_APP_SECRET,
         BASE_URL: process.env.BASE_URL,
         RAVE_PUB_KEY: process.env.RAVE_PUB_KEY,

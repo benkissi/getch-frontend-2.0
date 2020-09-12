@@ -5,6 +5,7 @@ import { splitArray } from "../utils/search";
 export const signUp = async (email, password) => {
   console.log("getting", email, password);
   const url = endpoints.SIGN_UP;
+  console.log('url', url)
   const data = {
     email,
     password,

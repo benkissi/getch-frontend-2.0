@@ -505,7 +505,7 @@ function connect(options) {
       error.name = err.name;
       error.stack = err.stack; // __NEXT_DIST_DIR is provided by webpack
 
-      (0, _sourceMapSupport.rewriteStacktrace)(error, "/home/benkissi/projects/getch/getch-frontend-2.0/.next");
+      (0, _sourceMapSupport.rewriteStacktrace)(error, "/mnt/c/Users/Ben Kissi/Documents/code/getch/getch-frontend-2.0/.next");
       return error;
     }
   };

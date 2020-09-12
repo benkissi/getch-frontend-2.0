@@ -21,6 +21,9 @@ function Signin(props) {
   });
 
   const router = useRouter();
+  useEffect(() => {
+    console.log('base', process.env.BASE_URL)
+  },[])
 
   useEffect(() => {
     if (props.user) {

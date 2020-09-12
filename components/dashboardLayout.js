@@ -18,7 +18,7 @@ const DashboardLayout = (props) => {
 
   useEffect(() => {
     if (searchError || userError) {
-      toast.error(`There was an error.`, {
+      toast.warn(`No interest found for keyword. Simplify keyword and try again.`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

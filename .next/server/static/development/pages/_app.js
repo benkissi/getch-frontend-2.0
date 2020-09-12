@@ -139,6 +139,7 @@ __webpack_require__.r(__webpack_exports__);
 const signUp = async (email, password) => {
   console.log("getting", email, password);
   const url = _endpoints__WEBPACK_IMPORTED_MODULE_1__["default"].SIGN_UP;
+  console.log('url', url);
   const data = {
     email,
     password
@@ -351,19 +352,19 @@ const verifyPayment = async (token, plan, ref) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 const endpoints = {
-  GET_PRODUCTS: shop => `${"http://localhost:9090/"}shopify/products/${shop}`,
-  FB_AUTH: `${"http://localhost:9090/"}facebook/auth`,
+  GET_PRODUCTS: shop => `${"http://localhost:8080/"}shopify/products/${shop}`,
+  FB_AUTH: `${"http://localhost:8080/"}facebook/auth`,
   FB_INTEREST_SEARCH: apiVersion => `https://graph.facebook.com/v${apiVersion}/search`,
-  GET_ADACCOUNTS: fbId => `${"http://localhost:9090/"}facebook/adaccounts/${fbId}`,
-  GET_CAMPAIGNS: accountId => `${"http://localhost:9090/"}facebook/campaigns/${accountId}`,
-  GET_ADSETS: campaignId => `${"http://localhost:9090/"}facebook/adsets/${campaignId}`,
-  GET_ADS: adsetId => `${"http://localhost:9090/"}facebook/ads/${adsetId}`,
-  GET_STATS: adId => `${"http://localhost:9090/"}facebook/stats/${adId}`,
-  SIGN_UP: `${"http://localhost:9090/"}users/signup`,
-  SIGN_IN: `${"http://localhost:9090/"}users/signin`,
-  LOG_OUT: `${"http://localhost:9090/"}users/logout`,
-  UPDATE_SEARCH_COUNT: `${"http://localhost:9090/"}facebook/count`,
-  VERIFY_PAYMENT: `${"http://localhost:9090/"}payments/verify`
+  GET_ADACCOUNTS: fbId => `${"http://localhost:8080/"}facebook/adaccounts/${fbId}`,
+  GET_CAMPAIGNS: accountId => `${"http://localhost:8080/"}facebook/campaigns/${accountId}`,
+  GET_ADSETS: campaignId => `${"http://localhost:8080/"}facebook/adsets/${campaignId}`,
+  GET_ADS: adsetId => `${"http://localhost:8080/"}facebook/ads/${adsetId}`,
+  GET_STATS: adId => `${"http://localhost:8080/"}facebook/stats/${adId}`,
+  SIGN_UP: `${"http://localhost:8080/"}users/signup`,
+  SIGN_IN: `${"http://localhost:8080/"}users/signin`,
+  LOG_OUT: `${"http://localhost:8080/"}users/logout`,
+  UPDATE_SEARCH_COUNT: `${"http://localhost:8080/"}facebook/count`,
+  VERIFY_PAYMENT: `${"http://localhost:8080/"}payments/verify`
 };
 /* harmony default export */ __webpack_exports__["default"] = (endpoints);
 
@@ -569,7 +570,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_toastify_dist_ReactToastify_min_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_toastify_dist_ReactToastify_min_css__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var react_gtm_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-gtm-module */ "react-gtm-module");
 /* harmony import */ var react_gtm_module__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_gtm_module__WEBPACK_IMPORTED_MODULE_7__);
-var _jsxFileName = "/home/benkissi/projects/getch/getch-frontend-2.0/pages/_app.js";
+var _jsxFileName = "/mnt/c/Users/Ben Kissi/Documents/code/getch/getch-frontend-2.0/pages/_app.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
