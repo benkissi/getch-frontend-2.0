@@ -1,16 +1,6 @@
 // import { useRavePayment } from "react-ravepayment";
 import RaveButton from "./raveButton";
 const Plan = (props) => {
-  const config = {
-    txref: "rave-123456",
-    customer_email: props.userEmail,
-    amount: 59,
-    PBFPubKey: process.env.RAVE_PUB_KEY,
-    currency: "USD",
-    country: "GH",
-    production: false,
-  };
-
   const onPaymentModalClose = () => {
     console.log(true);
   };
@@ -38,8 +28,9 @@ const Plan = (props) => {
       </div>
       <div className="price">
         <span>$</span>
-        59
+        10
       </div>
+      <span className="period_label">One time payment</span>
       <div className="features">
         {props.features.map((feature, index) => (
           <div className="feature" key={index}>
@@ -57,7 +48,7 @@ const Plan = (props) => {
         currency="USD"
         country="GH"
         reference={getReference()}
-        amount={59}
+        amount={10}
         ravePubKey={process.env.RAVE_PUB_KEY}
         close={onPaymentModalClose}
         fName={props.fName}
@@ -136,6 +127,15 @@ const Plan = (props) => {
         }
         .price span {
           font-size: 30px;
+        }
+
+        .period_label{
+          background-color: #4e53c8;
+          text-align: center;
+          color: #fafafa;
+          width: 50%;
+          margin: auto;
+          {/* align-self: center; */}
         }
       `}</style>
     </div>
