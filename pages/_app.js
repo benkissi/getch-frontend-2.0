@@ -1,4 +1,5 @@
 import { Provider } from "react-redux";
+import Head from "next/head";
 import App from "next/app";
 import withRedux from "next-redux-wrapper";
 import makeStore from "../redux/store";
@@ -24,6 +25,9 @@ export default withRedux(makeStore, { debug: true })(
 
       return (
         <Provider store={store}>
+          <Head>
+            <link rel="shortcut icon" href="/images/fav.png" />
+          </Head>
           <Layout>
             <Component {...pageProps} />
             <ToastContainer
