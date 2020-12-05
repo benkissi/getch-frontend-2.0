@@ -36,7 +36,7 @@ const Plans = (props) => {
 
   const loadScript = (callback) => {
     const script = document.createElement("script");
-    script.src = !props.isProduction
+    script.src = process.env.NODE_ENV !== "production"
       ? "https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"
       : "https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js";
     document.getElementsByTagName("head")[0].appendChild(script);
