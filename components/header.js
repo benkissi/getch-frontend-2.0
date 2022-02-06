@@ -56,9 +56,16 @@ const Header = (props) => {
         ) : (
           ""
         )} */}
-        <Button target="_blank" href="https://www.buymeacoffee.com/benkissi" style={{ background: "#f86326", border: "none", color: "white" }} >
-          Buy me coffee
+        <div className="cta-wrapper">
+          <p>Want to show appreciation?</p>
+          <Button
+            target="_blank"
+            href="https://www.buymeacoffee.com/benkissi"
+            style={{ background: "#f86326", border: "none", color: "white" }}
+          >
+            Buy me coffee
           </Button>
+        </div>
 
         <div className="profile-wrapper" onClick={handleSettingsClick}>
           <img src="/images/user.svg" />
@@ -116,6 +123,19 @@ const Header = (props) => {
 
         .red {
           color: red;
+        }
+
+        .cta-wrapper {
+          display: flex;
+          align-items: center;
+        }
+
+        .cta-wrapper p {
+          color: #808080;
+          font-weight: bold;
+          font-style: italic;
+          margin: 0;
+          margin-right: 10px;
         }
       `}</style>
     </div>
