@@ -16,6 +16,9 @@ export const tableColumns = [
       const formatter = new Intl.NumberFormat("en-US");
       return <p>{formatter.format(item)}</p>;
     },
+    sorter: (a, b) => {
+      return a.audience_size - b.audience_size
+    }
   },
   {
     title: "Topic",
@@ -47,7 +50,9 @@ export const tableColumns = [
     dataIndex: "relevance",
     width: 100,
     key: "relevance",
-    sorter: (a, b) => a - b,
+    sorter: (a, b) => {
+      return a.relevance - b.relevance
+    }
   },
   {
     title: "Links",

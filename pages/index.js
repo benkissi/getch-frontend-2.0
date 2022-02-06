@@ -60,30 +60,38 @@ const Index = (props) => {
 
   useEffect(() => {
     if (interestData && interestCount) {
+      const formattedInterest = interestData.map((item) => {
+        return {
+          ...item,
+          audience_size: item.audience_size ? item.audience_size : item.audience_size_upper_bound
+        }
+      })
+
       const max = Math.max.apply(
         Math,
-        interestData.map((item) => item["audience_size"])
+        formattedInterest.map((item) => item["audience_size"])
       );
       const min = Math.min.apply(
         Math,
-        interestData.map((item) => item["audience_size"])
+        formattedInterest.map((item) => item["audience_size"])
       );
 
       setState({
         ...state,
         max: max,
         min: min,
-        interests: interestData,
+        interests: formattedInterest,
         interestNumber: interestCount,
+        formattedInterest: formattedInterest
       });
     }
   }, [interestData, interestCount]);
 
   const getInterest = async (value) => {
-    if (searchCount >= 3 && user.plan === "PL001") {
-      Router.push("/plans");
-      return;
-    }
+    // if (searchCount >= 3 && user.plan === "PL001") {
+    //   Router.push("/plans");
+    //   return;
+    // }
     await searchInterest(fbToken.token, value, 500, user.xToken);
   };
 
@@ -149,7 +157,7 @@ const Index = (props) => {
         let readyExport = {};
         readyExport.id = item.id;
         readyExport.name = item.name;
-        readyExport.audience = item.audience_size;
+        readyExport.audience = item.audience_size || item.audience_size_upper_bound;
         readyExport.description = item.description;
         readyExport.topic = item.topic;
         readyExport.path = JSON.stringify(item.path);
@@ -177,9 +185,12 @@ const Index = (props) => {
       });
     }
   };
+  
+  const { interests, selectedRowKeys, interestNumber, max, min, formattedInterest } = state;
+  console.log(max, min, interestData)
 
   const onFilterChange = (value) => {
-    const filtered = interestData.filter(
+    const filtered = formattedInterest.filter(
       (item) =>
         item["audience_size"] >= value[0] && item["audience_size"] <= value[1]
     );
@@ -189,7 +200,7 @@ const Index = (props) => {
     });
   };
 
-  const { interests, selectedRowKeys, interestNumber, max, min } = state;
+
   return (
     <div id="wrapper">
       <div id="main-content">

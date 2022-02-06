@@ -29,7 +29,7 @@ const Header = (props) => {
         <img src="/images/newLogoX.svg" />
       </div>
 
-      {isFreeUser() ? (
+      {/* {isFreeUser() ? (
         <div className="count">
           <p>
             3 free search:{" "}
@@ -42,10 +42,10 @@ const Header = (props) => {
         </div>
       ) : (
         ""
-      )}
+      )} */}
 
       <div id="actions">
-        {isFreeUser() ? (
+        {/* {isFreeUser() ? (
           <Button
             hidden={props.user && !props.user.plan == "PL001"}
             style={{ background: "#f86326", border: "none", color: "white" }}
@@ -55,7 +55,10 @@ const Header = (props) => {
           </Button>
         ) : (
           ""
-        )}
+        )} */}
+        <Button target="_blank" href="https://www.buymeacoffee.com/benkissi" style={{ background: "#f86326", border: "none", color: "white" }} >
+          Buy me coffee
+          </Button>
 
         <div className="profile-wrapper" onClick={handleSettingsClick}>
           <img src="/images/user.svg" />
