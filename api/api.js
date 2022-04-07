@@ -3,9 +3,7 @@ import endpoints from "./endpoints";
 import { splitArray } from "../utils/search";
 
 export const signUp = async (email, password) => {
-  console.log("getting", email, password);
   const url = endpoints.SIGN_UP;
-  console.log('url', url)
   const data = {
     email,
     password,
@@ -24,7 +22,6 @@ export const signIn = async (email, password) => {
     email,
     password,
   };
-  console.log("api", params);
 
   const res = await axios.get(url, {
     params,
@@ -35,7 +32,6 @@ export const signIn = async (email, password) => {
 };
 
 export const fbAuthentication = async (token, id, fbId, name) => {
-  console.log("name api", name);
   const url = endpoints.FB_AUTH;
   const params = {
     token,
@@ -47,8 +43,6 @@ export const fbAuthentication = async (token, id, fbId, name) => {
   const res = await axios.get(url, {
     params,
   });
-
-  console.log("res data", res.data);
 
   return res.data;
 };
@@ -71,6 +65,7 @@ export const getInterestSuggestions = async (token, keywords, limit = 100) => {
   let interestSuggestions = [];
   let response;
   const url = endpoints.FB_INTEREST_SEARCH(2.11);
+  
   const params = {
     interest_list: keywords,
     type: "adinterestsuggestion",
@@ -80,6 +75,7 @@ export const getInterestSuggestions = async (token, keywords, limit = 100) => {
   response = await axios.get(url, {
     params,
   });
+  if(!response?.data?.data?.next) return interestSuggestions
   interestSuggestions.push(...response.data.data);
   let page = 0;
   while (response.data.paging.next) {
@@ -98,15 +94,16 @@ export const compileInterestSuggestions = async (
   keywords,
   limit = 100
 ) => {
-  if (keywords.length > 200) {
-    let suggestions = [];
-    const dataArray = splitArray(keywords, 200);
-    for (let i = 0; i < dataArray.length; i++) {
-      suggestions.push(
-        ...(await getInterestSuggestions(token, dataArray[i], limit))
-      );
-    }
-    return suggestions;
+  if (keywords.length > 40) {
+    // let suggestions = [];
+    // const dataArray = splitArray(keywords, 100);
+    // for (let i = 0; i < dataArray.length; i++) {
+    //   suggestions.push(
+    //     ...(await getInterestSuggestions(token, dataArray[i], limit))
+    //   );
+    // }
+    // return suggestions;
+    return await getInterestSuggestions(token, keywords.slice(0, 40), limit)
   }
 
   return await getInterestSuggestions(token, keywords, limit);
@@ -120,8 +117,6 @@ export const getProducts = async (shopName) => {
   const res = await axios.get(url, {
     params,
   });
-
-  console.log(res.data);
 };
 
 export const getAdAccounts = async (fbId, token) => {
@@ -215,8 +210,6 @@ export const userLogout = async (token) => {
     headers,
   });
 
-  console.log("res", res);
-
   return res.data;
 };
 
@@ -228,7 +221,6 @@ export const updateSearchCount = async (token) => {
   };
 
   const res = await axios.get(url, { headers });
-  console.log("count", res);
   return res.data;
 };
 
@@ -245,6 +237,5 @@ export const verifyPayment = async (token, plan, ref) => {
   };
 
   const res = await axios.post(url, data, { headers });
-  console.log("api", res.data);
   return res.data;
 };

@@ -28,11 +28,14 @@ function* getInterest({ payload }) {
     const data = yield searchInterest(token, value, limit);
     const levelOne = addScore(data.data, 5);
     let names = getInterestNames(data.data);
-
     const suggestions = yield compileInterestSuggestions(token, names);
+    let levelTwo = []
+    if(suggestions?.length){
+      levelTwo = addScore(suggestions, 3);
+    }
 
-    const levelTwo = addScore(suggestions, 3);
     let allInterest = [...levelOne, ...levelTwo];
+    
     const rankedList = allInterest.map((interest) => {
       const exist = containsKeyword(value, interest.name);
       if (exist !== -1) {
